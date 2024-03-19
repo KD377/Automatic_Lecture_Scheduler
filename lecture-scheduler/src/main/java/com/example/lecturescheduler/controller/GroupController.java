@@ -1,7 +1,7 @@
 package com.example.lecturescheduler.controller;
 
-import com.example.lecturescheduler.model.Group;
-import com.example.lecturescheduler.service.GroupService;
+import com.example.lecturescheduler.model.SingleGroup;
+import com.example.lecturescheduler.service.SingleGroupService;
 import com.example.lecturescheduler.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,37 +13,37 @@ import java.util.List;
 @RequestMapping("/api/groups")
 public class GroupController {
 
-    private final GroupService groupService;
+    private final SingleGroupService groupService;
 
     @Autowired
-    public GroupController(GroupService groupService) {
+    public GroupController(SingleGroupService groupService) {
         this.groupService = groupService;
     }
 
     // GET All Groups
     @GetMapping
-    public List<Group> getAllGroups() {
+    public List<SingleGroup> getAllGroups() {
         return groupService.findAllGroups();
     }
 
     // GET Group by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Group> getGroupById(@PathVariable Long id) {
-        Group group = groupService.findGroupById(id)
+    public ResponseEntity<SingleGroup> getGroupById(@PathVariable Long id) {
+        SingleGroup group = groupService.findGroupById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Group not found for this id :: " + id));
         return ResponseEntity.ok().body(group);
     }
 
     // POST Create Group
     @PostMapping
-    public Group createGroup(@RequestBody Group group) {
+    public SingleGroup createGroup(@RequestBody SingleGroup group) {
         return groupService.saveGroup(group);
     }
 
     // PUT Update Group
     @PutMapping("/{id}")
-    public ResponseEntity<Group> updateGroup(@PathVariable Long id, @RequestBody Group groupDetails) {
-        Group updatedGroup = groupService.updateGroup(id, groupDetails);
+    public ResponseEntity<SingleGroup> updateGroup(@PathVariable Long id, @RequestBody SingleGroup groupDetails) {
+        SingleGroup updatedGroup = groupService.updateGroup(id, groupDetails);
         return ResponseEntity.ok(updatedGroup);
     }
 

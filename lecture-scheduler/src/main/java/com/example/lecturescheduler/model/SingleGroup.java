@@ -1,9 +1,6 @@
 package com.example.lecturescheduler.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +12,7 @@ import lombok.AllArgsConstructor;
 @Setter
 @Getter
 @Entity
-public class Group {
+public class SingleGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,7 +21,7 @@ public class Group {
     private int numberOfStudents;
 
     @Builder
-    public Group(String name, String programOfStudy, int numberOfStudents) {
+    public SingleGroup(String name, String programOfStudy, int numberOfStudents) {
         this.name = name;
         this.programOfStudy = programOfStudy;
         this.numberOfStudents = numberOfStudents;

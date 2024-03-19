@@ -1,9 +1,9 @@
 package com.example.lecturescheduler;
 
 import com.example.lecturescheduler.exception.ResourceNotFoundException;
-import com.example.lecturescheduler.model.Group;
+import com.example.lecturescheduler.model.SingleGroup;
 import com.example.lecturescheduler.repository.GroupRepository;
-import com.example.lecturescheduler.service.GroupService;
+import com.example.lecturescheduler.service.SingleGroupService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,13 +17,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-class GroupServiceTest {
+class SingleGroupServiceTest {
 
     @Mock
     private GroupRepository groupRepository;
 
     @InjectMocks
-    private GroupService groupService;
+    private SingleGroupService groupService;
 
     @BeforeEach
     void setUp() {
@@ -33,14 +33,14 @@ class GroupServiceTest {
     @Test
     void findAllGroups_ShouldReturnAllGroups() {
         // given
-        when(groupRepository.findAll()).thenReturn(List.of(Group.builder()
+        when(groupRepository.findAll()).thenReturn(List.of(SingleGroup.builder()
                 .name("Group 1")
                 .programOfStudy("Program 1")
                 .numberOfStudents(30)
                 .build()));
 
         // when
-        List<Group> result = groupService.findAllGroups();
+        List<SingleGroup> result = groupService.findAllGroups();
 
         // then
         assertThat(result).hasSize(1);
@@ -51,15 +51,15 @@ class GroupServiceTest {
     @Test
     void saveGroup_ShouldReturnSavedGroup() {
         // given
-        Group group = Group.builder()
+        SingleGroup group = SingleGroup.builder()
                 .name("Group 1")
                 .programOfStudy("Program 1")
                 .numberOfStudents(30)
                 .build();
-        when(groupRepository.save(any(Group.class))).thenReturn(group);
+        when(groupRepository.save(any(SingleGroup.class))).thenReturn(group);
 
         // when
-        Group savedGroup = groupService.saveGroup(group);
+        SingleGroup savedGroup = groupService.saveGroup(group);
 
         // then
         assertThat(savedGroup).isNotNull();
@@ -70,7 +70,7 @@ class GroupServiceTest {
     void updateGroup_WhenNotFound_ShouldThrowException() {
         // given
         Long groupId = 1L;
-        Group groupDetails = Group.builder()
+        SingleGroup groupDetails = SingleGroup.builder()
                 .name("Updated Name")
                 .programOfStudy("Updated Program")
                 .numberOfStudents(25)
@@ -82,7 +82,7 @@ class GroupServiceTest {
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Group not found for this id :: " + groupId);
 
-        verify(groupRepository, never()).save(any(Group.class));
+        verify(groupRepository, never()).save(any(SingleGroup.class));
     }
 
     @Test

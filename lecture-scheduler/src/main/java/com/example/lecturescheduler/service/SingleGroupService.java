@@ -1,7 +1,7 @@
 package com.example.lecturescheduler.service;
 
 import com.example.lecturescheduler.exception.ResourceNotFoundException;
-import com.example.lecturescheduler.model.Group;
+import com.example.lecturescheduler.model.SingleGroup;
 import com.example.lecturescheduler.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,29 +10,29 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class GroupService {
+public class SingleGroupService {
 
     private final GroupRepository groupRepository;
 
     @Autowired
-    public GroupService(GroupRepository groupRepository) {
+    public SingleGroupService(GroupRepository groupRepository) {
         this.groupRepository = groupRepository;
     }
 
-    public List<Group> findAllGroups() {
+    public List<SingleGroup> findAllGroups() {
         return groupRepository.findAll();
     }
 
-    public Optional<Group> findGroupById(Long id) {
+    public Optional<SingleGroup> findGroupById(Long id) {
         return groupRepository.findById(id);
     }
 
-    public Group saveGroup(Group group) {
+    public SingleGroup saveGroup(SingleGroup group) {
         return groupRepository.save(group);
     }
 
-    public Group updateGroup(Long id, Group groupDetails) {
-        Group group = groupRepository.findById(id)
+    public SingleGroup updateGroup(Long id, SingleGroup groupDetails) {
+        SingleGroup group = groupRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Group not found for this id :: " + id));
         group.setName(groupDetails.getName());
         group.setProgramOfStudy(groupDetails.getProgramOfStudy());
