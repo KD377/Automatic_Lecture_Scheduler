@@ -1,14 +1,13 @@
 package com.example.lecturescheduler.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.AllArgsConstructor;
+
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,13 +19,13 @@ public class Classroom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private int capacity;
-    private String specialFeatures;
+
+    @ManyToMany(mappedBy = "classrooms", fetch = FetchType.LAZY)
+    private List<Subject> subjects;
 
     @Builder
-    public Classroom(String name, int capacity, String specialFeatures) {
+    public Classroom(String name, List<Subject> subjects) {
         this.name = name;
-        this.capacity = capacity;
-        this.specialFeatures = specialFeatures;
+        this.subjects = subjects;
     }
 }

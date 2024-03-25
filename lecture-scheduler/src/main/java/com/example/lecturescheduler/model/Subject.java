@@ -1,14 +1,13 @@
 package com.example.lecturescheduler.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Setter
 @Getter
@@ -23,6 +22,9 @@ public class Subject {
     private String name;
     private String courseLevel;
     private int courseLength;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Classroom> classrooms;
 
     public Subject(String name, String courseLevel, int courseLength) {
         this.name = name;

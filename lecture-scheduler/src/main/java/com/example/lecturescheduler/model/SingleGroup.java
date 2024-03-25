@@ -1,11 +1,13 @@
 package com.example.lecturescheduler.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.AllArgsConstructor;
+
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,10 +22,15 @@ public class SingleGroup {
     private String programOfStudy;
     private int numberOfStudents;
 
+    // Relacja wiele-do-wielu z Instructor
+    @ManyToMany(mappedBy = "groups", fetch = FetchType.LAZY)
+    private List<Instructor> instructors;
+
     @Builder
-    public SingleGroup(String name, String programOfStudy, int numberOfStudents) {
+    public SingleGroup(String name, String programOfStudy, int numberOfStudents, List<Instructor> instructors) {
         this.name = name;
         this.programOfStudy = programOfStudy;
         this.numberOfStudents = numberOfStudents;
+        this.instructors = instructors;
     }
 }
