@@ -1,8 +1,10 @@
 package com.example.lecturescheduler;
 
 import com.example.lecturescheduler.exception.ResourceNotFoundException;
+import com.example.lecturescheduler.model.Instructor;
 import com.example.lecturescheduler.model.SingleGroup;
 import com.example.lecturescheduler.repository.GroupRepository;
+import com.example.lecturescheduler.repository.InstructorRepository;
 import com.example.lecturescheduler.service.SingleGroupService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,6 +24,9 @@ class SingleGroupServiceTest {
 
     @Mock
     private GroupRepository groupRepository;
+
+    @Mock
+    private InstructorRepository instructorRepository;
 
     @InjectMocks
     private SingleGroupService groupService;
@@ -96,6 +102,49 @@ class SingleGroupServiceTest {
 
         // then
         verify(groupRepository).deleteById(groupId);
+    }
+
+    @Test
+    void addInstructorToGroup_ShouldCorrectlyAddInstructor() {
+        // given
+        Long groupId = 1L;
+        Long instructorId = 1L;
+        SingleGroup group = new SingleGroup();
+        group.setInstructors(new ArrayList<>()); // Inicjalizacja pustej listy instruktorów
+        Instructor instructor = new Instructor();
+        instructor.setId(instructorId);
+        when(groupRepository.findById(groupId)).thenReturn(Optional.of(group));
+        when(instructorRepository.findById(instructorId)).thenReturn(Optional.of(instructor));
+        when(groupRepository.save(any(SingleGroup.class))).thenReturn(group); // Zwróć zmockowaną grupę po zapisie
+
+        // when
+        SingleGroup updatedGroup = groupService.addInstructorToGroup(groupId, instructorId);
+
+        // then
+        assertThat(updatedGroup.getInstructors()).contains(instructor);
+        verify(groupRepository).save(group);
+        verify(instructorRepository).findById(instructorId);
+    }
+
+
+    @Test
+    void removeInstructorFromGroup_ShouldCorrectlyRemoveInstructor() {
+        // given
+        Long groupId = 1L;
+        Long instructorId = 1L;
+        Instructor instructor = new Instructor();
+        instructor.setId(instructorId);
+        SingleGroup group = new SingleGroup();
+        group.setInstructors(new ArrayList<>(List.of(instructor))); // Inicjalizacja listy z instruktorem
+        when(groupRepository.findById(groupId)).thenReturn(Optional.of(group));
+        when(groupRepository.save(any(SingleGroup.class))).thenReturn(group); // Zwróć zmockowaną grupę po zapisie
+
+        // when
+        SingleGroup updatedGroup = groupService.removeInstructorFromGroup(groupId, instructorId);
+
+        // then
+        assertThat(updatedGroup.getInstructors()).doesNotContain(instructor);
+        verify(groupRepository).save(group);
     }
 
 }

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -31,6 +32,6 @@ public class SingleGroup {
         this.name = name;
         this.programOfStudy = programOfStudy;
         this.numberOfStudents = numberOfStudents;
-        this.instructors = instructors;
+        this.instructors = (instructors == null ? new ArrayList<>() : instructors);
     }
 }

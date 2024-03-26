@@ -26,9 +26,10 @@ public class Subject {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Classroom> classrooms;
 
-    public Subject(String name, String courseLevel, int courseLength) {
+    public Subject(String name, String courseLevel, int courseLength, List<Classroom> classrooms) {
         this.name = name;
         this.courseLevel = courseLevel;
         this.courseLength = courseLength;
+        this.classrooms = classrooms;
     }
 }

@@ -1,11 +1,14 @@
 package com.example.lecturescheduler.service;
 
 import com.example.lecturescheduler.exception.ResourceNotFoundException;
+import com.example.lecturescheduler.model.Instructor;
 import com.example.lecturescheduler.model.SingleGroup;
 import com.example.lecturescheduler.repository.GroupRepository;
+import com.example.lecturescheduler.repository.InstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,10 +16,12 @@ import java.util.Optional;
 public class SingleGroupService {
 
     private final GroupRepository groupRepository;
+    private final InstructorRepository instructorRepository;
 
     @Autowired
-    public SingleGroupService(GroupRepository groupRepository) {
+    public SingleGroupService(GroupRepository groupRepository, InstructorRepository instructorRepository) {
         this.groupRepository = groupRepository;
+        this.instructorRepository = instructorRepository;
     }
 
     public List<SingleGroup> findAllGroups() {
@@ -43,4 +48,31 @@ public class SingleGroupService {
     public void deleteGroup(Long id) {
         groupRepository.deleteById(id);
     }
+
+    public SingleGroup addInstructorToGroup(Long groupId, Long instructorId) {
+        SingleGroup group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new ResourceNotFoundException("Group not found for this id :: " + groupId));
+        Instructor instructor = instructorRepository.findById(instructorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Instructor not found for this id :: " + instructorId));
+
+        if (group.getInstructors() == null) {
+            group.setInstructors(new ArrayList<>());
+        }
+        group.getInstructors().add(instructor);
+        return groupRepository.save(group);
+    }
+
+    public SingleGroup removeInstructorFromGroup(Long groupId, Long instructorId) {
+        SingleGroup group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new ResourceNotFoundException("Group not found for this id :: " + groupId));
+        group.getInstructors().removeIf(instructor -> instructor.getId().equals(instructorId));
+        return groupRepository.save(group);
+    }
+
+    public List<Instructor> getInstructorsForGroup(Long groupId) {
+        SingleGroup group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new ResourceNotFoundException("Group not found for this id :: " + groupId));
+        return group.getInstructors();
+    }
+
 }

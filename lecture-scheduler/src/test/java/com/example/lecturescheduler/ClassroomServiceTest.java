@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-/*
+
 public class ClassroomServiceTest {
 
     @Mock
@@ -33,8 +33,6 @@ public class ClassroomServiceTest {
     void saveClassroom_shouldReturnSavedClassroom() {
         Classroom classroom = Classroom.builder()
                 .name("Fizyka 201")
-                .capacity(25)
-                .specialFeatures("Laboratorium")
                 .build();
 
         when(classroomRepository.save(any(Classroom.class))).thenReturn(classroom);
@@ -72,13 +70,9 @@ public class ClassroomServiceTest {
         Long classroomId = 1L;
         Classroom existingClassroom = Classroom.builder()
                 .name("Fizyka 201")
-                .capacity(25)
-                .specialFeatures("Laboratorium")
                 .build();
         Classroom updatedDetails = Classroom.builder()
                 .name("Matematyka 201")
-                .capacity(50)
-                .specialFeatures("Tablica interaktywna")
                 .build();
         when(classroomRepository.findById(classroomId)).thenReturn(Optional.of(existingClassroom));
         when(classroomRepository.save(any(Classroom.class))).thenReturn(updatedDetails);
@@ -94,8 +88,6 @@ public class ClassroomServiceTest {
         Long classroomId = 1L;
         Classroom classroom = Classroom.builder()
                 .name("Fizyka 201")
-                .capacity(25)
-                .specialFeatures("Laboratorium")
                 .build();
         when(classroomRepository.findById(classroomId)).thenReturn(Optional.of(classroom));
         doNothing().when(classroomRepository).delete(classroom);
@@ -110,8 +102,6 @@ public class ClassroomServiceTest {
         Long classroomId = 1L;
         Classroom updatedDetails = Classroom.builder()
                 .name("Update 201")
-                .capacity(30)
-                .specialFeatures("Laboratorium, komputery")
                 .build();
         when(classroomRepository.findById(classroomId)).thenReturn(Optional.empty());
 
@@ -123,4 +113,3 @@ public class ClassroomServiceTest {
     }
 
 }
-*/

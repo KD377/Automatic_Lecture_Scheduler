@@ -20,12 +20,8 @@ public class Classroom {
     private Long id;
     private String name;
 
-    @ManyToMany(mappedBy = "classrooms", fetch = FetchType.LAZY)
-    private List<Subject> subjects;
-
     @Builder
-    public Classroom(String name, List<Subject> subjects) {
+    public Classroom(String name) {
         this.name = name;
-        this.subjects = subjects;
     }
 }
