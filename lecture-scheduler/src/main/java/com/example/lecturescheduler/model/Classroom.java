@@ -14,13 +14,13 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
+@Builder
 public class Classroom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    @Builder
     public Classroom(String name) {
         this.name = name;
     }

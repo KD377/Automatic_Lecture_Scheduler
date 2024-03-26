@@ -1,20 +1,18 @@
 package com.example.lecturescheduler.model;
 
+import jakarta.persistence.Embeddable;
+import lombok.*;
+
 import java.io.Serializable;
 import java.time.LocalTime;
-import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
 @Setter
 @Getter
+@Builder
 @Embeddable
 public class TimeSlot implements Serializable {
     private LocalTime startTime;
     private LocalTime endTime;
-
 }

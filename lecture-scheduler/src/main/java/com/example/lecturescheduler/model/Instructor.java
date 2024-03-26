@@ -20,6 +20,7 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
+@Builder
 public class Instructor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +40,6 @@ public class Instructor {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<SingleGroup> groups; // Lista grup, w których nauczyciel może uczyć
 
-    @Builder
     public Instructor(String name, String department, List<Subject> subjectsTaught, List<Boolean> availability, List<Boolean> preferences, List<SingleGroup> groups) {
         this.name = name;
         this.department = department;

@@ -15,6 +15,7 @@ import java.util.List;
 @Setter
 @Getter
 @Entity
+@Builder
 public class SingleGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +28,6 @@ public class SingleGroup {
     @ManyToMany(mappedBy = "groups", fetch = FetchType.LAZY)
     private List<Instructor> instructors;
 
-    @Builder
     public SingleGroup(String name, String programOfStudy, int numberOfStudents, List<Instructor> instructors) {
         this.name = name;
         this.programOfStudy = programOfStudy;
