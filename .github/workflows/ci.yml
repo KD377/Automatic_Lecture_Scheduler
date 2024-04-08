@@ -2,9 +2,11 @@ name: Java 21 CI with Maven
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - '*'  # Trigger on all branches
   pull_request:
-    branches: [ main ]
+    branches:
+      - '*'  # Trigger on all branches
 
 jobs:
   build:
@@ -22,6 +24,8 @@ jobs:
 
       - name: Compile code
         run: mvn -B compile
+        working-directory: ./lecture-scheduler
 
       - name: Run tests
         run: mvn -B test
+        working-directory: ./lecture-scheduler
