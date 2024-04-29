@@ -57,6 +57,39 @@ class InstructorServiceTest {
     }
 
     @Test
+    void findAllInstructorsBySubject_ShouldReturnInstructors() {
+        // Mock data
+        Long subjectId = 1L;
+
+        // Create a subject
+        Subject subject = new Subject();
+        subject.setId(subjectId);
+
+
+        Instructor instructor1 = new Instructor();
+        instructor1.setId(1L);
+        instructor1.setName("John Doe");
+        instructor1.setSubjectsTaught(Arrays.asList(subject));
+
+        Instructor instructor2 = new Instructor();
+        instructor2.setId(2L);
+        instructor2.setName("Jane Smith");
+        instructor2.setSubjectsTaught(Arrays.asList(subject));
+
+        // Mock behavior
+        when(subjectRepository.findById(subjectId)).thenReturn(Optional.of(subject));
+        when(instructorRepository.findBySubject(subject)).thenReturn(Arrays.asList(instructor1, instructor2));
+
+        // Call the method
+        List<Instructor> result = instructorService.findBySubject(subject);
+
+        // Verify the result
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0).getName()).isEqualTo("John Doe");
+        assertThat(result.get(1).getName()).isEqualTo("Jane Smith");
+    }
+
+    @Test
     void saveInstructor_ShouldReturnSavedInstructor() {
         Instructor instructor = new Instructor("Mark Spencer", "Chemistry", null, Arrays.asList(true), Arrays.asList(false), null);
         when(instructorRepository.save(any(Instructor.class))).thenReturn(instructor);

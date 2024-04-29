@@ -33,4 +33,6 @@ public class LectureSession {
 
     @Embedded
     private TimeSlot timeSlot;
+
+    private int numberOfTimeSlot;
 }
