@@ -19,6 +19,13 @@ public class LectureSession {
     @ManyToOne(fetch = FetchType.LAZY)
     private SingleGroup group;
 
+    @Override
+    public String toString() {
+        return "\n" + this.subject.getName() +
+                "\n" + this.instructor.getName() +
+                '\n' + this.numberOfTimeSlot + this.getDay();
+    }
+
     @ManyToOne(fetch = FetchType.LAZY)
     private Subject subject;
 

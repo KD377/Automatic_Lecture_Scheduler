@@ -56,7 +56,7 @@ public class PopulationGenerator {
                 while(tries > 0){
                     DayOfWeek randomDay = drawRandomDay();
 
-                    int randomTimeSlot = random.nextInt(10) + 1;
+                    int randomTimeSlot = random.nextInt(5) + 1;
                     int randomClassIndex = random.nextInt(possibleClassroms.size());
                     int randomInstructorIndex = random.nextInt(possibleInstructors.size());
 
@@ -87,15 +87,18 @@ public class PopulationGenerator {
     }
 
     public boolean checkConflicts(LectureSession newSession, List<LectureSession> existingSessions) {
+        if(existingSessions.isEmpty()) {
+            return true;
+        }
         for (LectureSession existingSession : existingSessions) {
             if (existingSession.getDay() == newSession.getDay() &&
                     existingSession.getNumberOfTimeSlot() == newSession.getNumberOfTimeSlot() &&
                     existingSession.getClassroom().equals(newSession.getClassroom()) &&
                     existingSession.getInstructor().equals(newSession.getInstructor())) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     private DayOfWeek drawRandomDay() {
