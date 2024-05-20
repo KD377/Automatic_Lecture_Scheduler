@@ -21,9 +21,12 @@ public class LectureSession {
 
     @Override
     public String toString() {
-        return "\n" + this.subject.getName() +
-                "\n" + this.instructor.getName() +
-                '\n' + this.numberOfTimeSlot + this.getDay();
+        return String.format("Time Slot: %d - %s\nSubject: %s\nInstructor: %s\nClassroom: %s\n",
+                this.numberOfTimeSlot,
+                this.day.toString(),
+                this.subject.getName(),
+                this.instructor.getName(),
+                this.classroom.getName());
     }
 
     @ManyToOne(fetch = FetchType.LAZY)

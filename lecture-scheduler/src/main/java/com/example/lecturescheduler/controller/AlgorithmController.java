@@ -28,7 +28,7 @@ public class AlgorithmController {
 
     @GetMapping("/trigger-genetic-algorithm")
     public ResponseEntity<String> triggerGeneticAlgorithm() {
-        List<LectureSession> timetable = this.populationGenerator.generateChromosome(10);
+        List<LectureSession> timetable = this.populationGenerator.generateChromosome();
         List<SingleGroup> singleGroups = singleGroupService.findAllGroups();
         for (SingleGroup group : singleGroups){
             System.out.println(group.getName() + ":");

@@ -29,77 +29,70 @@ public class PopulationGenerator {
         this.classroomService = classroomService;
     }
 
-    public List<LectureSession> generateChromosome(int numOfTries) {
+    public List<LectureSession> generateChromosome() {
         List<LectureSession> timeTable = new ArrayList<>();
         Random random = new Random();
 
         Map<Subject, Integer> subjects = subjectService.getSubjectsWithOcurrences();
         List<SingleGroup> groups = singleGroupService.findAllGroups();
 
-
         Deque<Subject> subjectsToArrange = this.createStack(subjects);
 
-        while (!subjectsToArrange.isEmpty()){
-
+        while (!subjectsToArrange.isEmpty()) {
             Subject subjectToArrange = subjectsToArrange.pollFirst();
             List<Instructor> possibleInstructors = instructorService.findBySubject(subjectToArrange);
-            List<Classroom> possibleClassroms = classroomService.findBySubject(subjectToArrange);
-            Collections.shuffle(possibleClassroms);
+            List<Classroom> possibleClassrooms = classroomService.findBySubject(subjectToArrange);
+            Collections.shuffle(possibleClassrooms);
             Collections.shuffle(possibleInstructors);
 
-            for (SingleGroup group : groups){
+            for (SingleGroup group : groups) {
+                boolean added = false;
+                while (!added) {
+                    LectureSession lectureSession = new LectureSession();
+                    lectureSession.setSubject(subjectToArrange);
+                    lectureSession.setGroup(group);
 
-                LectureSession lectureSession = new LectureSession();
-                lectureSession.setSubject(subjectToArrange);
-                lectureSession.setGroup(group);
-                int tries = numOfTries;
-                while(tries > 0){
                     DayOfWeek randomDay = drawRandomDay();
-
-                    int randomTimeSlot = random.nextInt(5) + 1;
-                    int randomClassIndex = random.nextInt(possibleClassroms.size());
+                    int randomTimeSlot = random.nextInt(2) + 1;
+                    int randomClassIndex = random.nextInt(possibleClassrooms.size());
                     int randomInstructorIndex = random.nextInt(possibleInstructors.size());
 
                     lectureSession.setDay(randomDay);
                     lectureSession.setInstructor(possibleInstructors.get(randomInstructorIndex));
-                    lectureSession.setClassroom(possibleClassroms.get(randomClassIndex));
+                    lectureSession.setClassroom(possibleClassrooms.get(randomClassIndex));
                     lectureSession.setNumberOfTimeSlot(randomTimeSlot);
 
-                    if(checkConflicts(lectureSession,timeTable)) {
+                    if (checkConflicts(lectureSession, timeTable)) {
                         timeTable.add(lectureSession);
-                        break;
+                        added = true;
                     }
-
-
-
-                    tries--;
                 }
-                if (tries <= 0) {
-                    subjectsToArrange.addLast(subjectToArrange);
-                    break;
-                }
-
             }
         }
         return timeTable;
-
-
     }
 
+
     public boolean checkConflicts(LectureSession newSession, List<LectureSession> existingSessions) {
-        if(existingSessions.isEmpty()) {
+        if (existingSessions.isEmpty()) {
             return true;
         }
         for (LectureSession existingSession : existingSessions) {
-            if (existingSession.getDay() == newSession.getDay() &&
-                    existingSession.getNumberOfTimeSlot() == newSession.getNumberOfTimeSlot() &&
-                    existingSession.getClassroom().equals(newSession.getClassroom()) &&
-                    existingSession.getInstructor().equals(newSession.getInstructor())) {
-                return false;
+            boolean sameTime = existingSession.getDay() == newSession.getDay() &&
+                    existingSession.getNumberOfTimeSlot() == newSession.getNumberOfTimeSlot();
+            if (sameTime) {
+                if (existingSession.getInstructor().equals(newSession.getInstructor())) {
+                    return false;
+                }
+                if (existingSession.getClassroom().equals(newSession.getClassroom())) {
+                    return false;
+                }
             }
         }
         return true;
     }
+
+
 
     private DayOfWeek drawRandomDay() {
         Random random = new Random();
