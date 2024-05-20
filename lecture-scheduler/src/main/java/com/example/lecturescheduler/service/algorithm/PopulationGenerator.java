@@ -7,11 +7,12 @@ import com.example.lecturescheduler.service.SingleGroupService;
 import com.example.lecturescheduler.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.time.DayOfWeek;
 
-@Component
+@Service
 public class PopulationGenerator {
     private final SubjectService subjectService;
 
@@ -29,7 +30,7 @@ public class PopulationGenerator {
         this.classroomService = classroomService;
     }
 
-    public List<LectureSession> generateChromosome() {
+    public Chromosome generateChromosome() {
         List<LectureSession> timeTable = new ArrayList<>();
         Random random = new Random();
 
@@ -53,7 +54,7 @@ public class PopulationGenerator {
                     lectureSession.setGroup(group);
 
                     DayOfWeek randomDay = drawRandomDay();
-                    int randomTimeSlot = random.nextInt(2) + 1;
+                    int randomTimeSlot = random.nextInt(5) + 1;
                     int randomClassIndex = random.nextInt(possibleClassrooms.size());
                     int randomInstructorIndex = random.nextInt(possibleInstructors.size());
 
@@ -69,7 +70,7 @@ public class PopulationGenerator {
                 }
             }
         }
-        return timeTable;
+        return new Chromosome(timeTable);
     }
 
 
@@ -81,6 +82,9 @@ public class PopulationGenerator {
             boolean sameTime = existingSession.getDay() == newSession.getDay() &&
                     existingSession.getNumberOfTimeSlot() == newSession.getNumberOfTimeSlot();
             if (sameTime) {
+                if (existingSession.getGroup().equals(newSession.getGroup())) {
+                    return false;
+                }
                 if (existingSession.getInstructor().equals(newSession.getInstructor())) {
                     return false;
                 }

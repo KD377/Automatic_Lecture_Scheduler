@@ -45,4 +45,15 @@ public class LectureSession {
     private TimeSlot timeSlot;
 
     private int numberOfTimeSlot;
+
+    public LectureSession(LectureSession other) {
+        this.id = other.id;
+        this.subject = other.subject;
+        this.timeSlot = other.timeSlot;
+        this.group = other.group;
+        this.day = other.day;
+        this.numberOfTimeSlot = other.numberOfTimeSlot;
+        this.instructor = other.instructor;
+        this.classroom = other.classroom;
+    }
 }
