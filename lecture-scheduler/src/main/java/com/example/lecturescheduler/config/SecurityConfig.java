@@ -22,8 +22,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/groups/**").permitAll()
                         .requestMatchers("/api/instructors/**").permitAll()
                         .requestMatchers("/api/subjects/**").permitAll()// Zezwalaj na anonimowy dostęp do endpointów "/api/classrooms"
-                        .anyRequest().authenticated()) // Wymaga uwierzytelnienia dla innych żądań
+                        .requestMatchers("/api/algorithm/**").permitAll()// Zezwalaj na anonimowy dostęp do endpointów "/api/classrooms"
+                        .requestMatchers("/windows/home").permitAll()
+                        .anyRequest().authenticated())
+                .oauth2Login(withDefaults())// Umożliwia uwierzytelnienie za pomocą OAuth 2.0
                 .httpBasic(withDefaults()); // Umożliwia uwierzytelnienie za pomocą HTTP Basic Authentication
         return http.build();
     }
+
 }
