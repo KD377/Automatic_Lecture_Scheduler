@@ -12,6 +12,7 @@ import java.time.DayOfWeek;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LectureSessionResponse {
+    String subjectName;
     String groupName;
     String lecturer;
     String classroom;

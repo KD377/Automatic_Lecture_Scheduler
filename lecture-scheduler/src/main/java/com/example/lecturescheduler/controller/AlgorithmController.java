@@ -41,6 +41,7 @@ public class AlgorithmController {
 
         Map<String, List<LectureSessionResponse>> groupedResponse = timetable.stream()
                 .map(session -> new LectureSessionResponse(
+                        session.getSubject().getName(),
                         session.getGroup().getName(),
                         session.getInstructor().getName(),
                         session.getClassroom().getName(),
