@@ -44,8 +44,8 @@ class InstructorServiceTest {
     @Test
     void findAllInstructors_ShouldReturnAllInstructors() {
         when(instructorRepository.findAll()).thenReturn(Arrays.asList(
-                new Instructor("John Doe", "Mathematics", null, Arrays.asList(true, false, true), Arrays.asList(false, true, true), null),
-                new Instructor("Jane Smith", "Physics", null, Arrays.asList(false, true, false), Arrays.asList(true, false, true), null)
+                new Instructor("John Doe", "Mathematics", null, Arrays.asList(false, true, true), null),
+                new Instructor("Jane Smith", "Physics", null, Arrays.asList(true, false, true), null)
         ));
 
         List<Instructor> result = instructorService.findAllInstructors();
@@ -91,7 +91,7 @@ class InstructorServiceTest {
 
     @Test
     void saveInstructor_ShouldReturnSavedInstructor() {
-        Instructor instructor = new Instructor("Mark Spencer", "Chemistry", null, Arrays.asList(true), Arrays.asList(false), null);
+        Instructor instructor = new Instructor("Mark Spencer", "Chemistry", null, Arrays.asList(false), null);
         when(instructorRepository.save(any(Instructor.class))).thenReturn(instructor);
 
         Instructor savedInstructor = instructorService.saveInstructor(instructor);
@@ -104,7 +104,7 @@ class InstructorServiceTest {
     @Test
     void updateInstructor_WhenNotFound_ShouldThrowException() {
         Long instructorId = 1L;
-        Instructor instructorDetails = new Instructor("Updated Name", "Updated Department", null, Arrays.asList(false, true), Arrays.asList(true, false), null);
+        Instructor instructorDetails = new Instructor("Updated Name", "Updated Department", null, Arrays.asList(true, false), null);
         when(instructorRepository.findById(instructorId)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> instructorService.updateInstructor(instructorId, instructorDetails))
@@ -117,7 +117,7 @@ class InstructorServiceTest {
     @Test
     void deleteInstructor_ShouldDeleteInstructor() {
         Long instructorId = 2L;
-        Instructor instructor = new Instructor("Emily Watson", "Biology", null, Arrays.asList(true, false), Arrays.asList(false, true), null);
+        Instructor instructor = new Instructor("Emily Watson", "Biology", null, Arrays.asList(false, true), null);
         when(instructorRepository.findById(instructorId)).thenReturn(Optional.of(instructor));
         doNothing().when(instructorRepository).delete(instructor);
 

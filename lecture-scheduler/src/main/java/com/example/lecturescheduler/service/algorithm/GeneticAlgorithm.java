@@ -1,5 +1,6 @@
 package com.example.lecturescheduler.service.algorithm;
 
+import com.example.lecturescheduler.model.Instructor;
 import com.example.lecturescheduler.model.LectureSession;
 import com.example.lecturescheduler.model.SingleGroup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,33 +90,24 @@ public class GeneticAlgorithm {
         for (Chromosome chromosome : population) {
             int clashes = calculateClashes(chromosome);
             int breaks = calculateBreaks(chromosome);
-            int numberOfFreeDays = calculateFreeDays(chromosome);
-            double fitness = 1.0 / ((clashes * 10) + (breaks) + 1) * (1 + numberOfFreeDays);
+            int notMetPreferences = calculatePreferences(chromosome);
+            double fitness = 1.0 / ((clashes * 100) + (breaks) + notMetPreferences + 1);
             chromosome.setFitnessScore(fitness);
         }
     }
 
-    private int calculateFreeDays(Chromosome chromosome) {
-        Map<DayOfWeek, Integer> dayOfWeekCount = new EnumMap<>(DayOfWeek.class);
-        List<LectureSession> sessions = chromosome.getLectureSessions();
-        for (DayOfWeek day : DayOfWeek.values()) {
-            dayOfWeekCount.put(day, 0);
-        }
-
-        for (LectureSession session : sessions) {
-            DayOfWeek day = session.getDay();
-            dayOfWeekCount.put(day, dayOfWeekCount.get(day) + 1);
-        }
-
-        int freeDaysCount = 0;
-        for (Integer count : dayOfWeekCount.values()) {
-            if (count == 0) {
-                freeDaysCount++;
+    private int calculatePreferences(Chromosome chromosome) {
+        int notMetPreferences = 0;
+        for(LectureSession session : chromosome.getLectureSessions()) {
+            int dayOfWeekNumber = session.getDay().getValue();
+            List<Boolean> preferences = session.getInstructor().getPreferences();
+            if(!preferences.get(dayOfWeekNumber - 1)){
+                notMetPreferences++;
             }
         }
-
-        return freeDaysCount - 2;
+        return notMetPreferences;
     }
+
 
     private int calculateBreaks(Chromosome chromosome) {
         Map<SingleGroup, Map<DayOfWeek, List<Integer>>> groupSchedule = new HashMap<>();
