@@ -20,13 +20,11 @@ public class ClassroomController {
         this.classroomService = classroomService;
     }
 
-    // GET All Classrooms
     @GetMapping
     public List<Classroom> getAllClassrooms() {
         return classroomService.findAllClassrooms();
     }
 
-    // GET Classroom by ID
     @GetMapping("/{id}")
     public ResponseEntity<Classroom> getClassroomById(@PathVariable Long id) {
         Classroom classroom = classroomService.findClassroomById(id)
@@ -34,7 +32,6 @@ public class ClassroomController {
         return ResponseEntity.ok().body(classroom);
     }
 
-    // POST Create Classroom
     @PostMapping
     public Classroom createClassroom(@RequestBody Classroom classroom) {
         return classroomService.saveClassroom(classroom);

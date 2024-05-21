@@ -53,7 +53,6 @@ public class InstructorService {
         instructor.setName(instructorDetails.getName());
         instructor.setDepartment(instructorDetails.getDepartment());
         instructor.setSubjectsTaught(instructorDetails.getSubjectsTaught());
-        instructor.setAvailability(instructorDetails.getAvailability());
         instructor.setPreferences(instructorDetails.getPreferences());
         return instructorRepository.save(instructor);
     }
