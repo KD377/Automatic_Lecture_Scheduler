@@ -32,6 +32,10 @@ public class InstructorService {
         return instructorRepository.save(instructor);
     }
 
+    public List<Instructor> findBySubject(Subject subject){
+        return instructorRepository.findBySubject(subject);
+    }
+
     // READ - Find all instructors
     public List<Instructor> findAllInstructors() {
         return instructorRepository.findAll();

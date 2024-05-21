@@ -21,6 +21,9 @@ public class Classroom {
     private Long id;
     private String name;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<Subject> subjects;
+
     public Classroom(String name) {
         this.name = name;
     }

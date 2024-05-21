@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -32,6 +34,31 @@ public class SubjectService {
     // READ
     public List<Subject> findAllSubjects() {
         return subjectRepository.findAll();
+    }
+
+    //returns a map of subject with calculated how many times per week it should take place
+    //We assume that a semester has 15 weeks
+    public Map<Subject,Integer> getSubjectsWithOcurrences() {
+
+        List <Subject> subjects = subjectRepository.findAll();
+        Map <Subject,Integer> subjectsWithOcc = new HashMap<>();
+
+        for (Subject subject : subjects) {
+            int numberOfHours = subject.getCourseLength();
+            double hoursPerWeek = numberOfHours / 15.0;
+
+            int occurences = 0;
+            if (hoursPerWeek >= 3 && hoursPerWeek < 4.5) {
+                occurences = 2;
+            } else if (hoursPerWeek < 3) {
+                occurences = 1;
+            } else {
+                occurences = (int) Math.round(hoursPerWeek / 1.5);
+            }
+
+            subjectsWithOcc.put(subject,occurences);
+        }
+        return subjectsWithOcc;
     }
 
     public Optional<Subject> findSubjectById(Long id) {

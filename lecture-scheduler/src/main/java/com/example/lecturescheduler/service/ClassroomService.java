@@ -2,6 +2,7 @@ package com.example.lecturescheduler.service;
 
 import com.example.lecturescheduler.exception.ResourceNotFoundException;
 import com.example.lecturescheduler.model.Classroom;
+import com.example.lecturescheduler.model.Subject;
 import com.example.lecturescheduler.repository.ClassroomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,10 @@ public class ClassroomService {
     // READ - Find all classrooms
     public List<Classroom> findAllClassrooms() {
         return classroomRepository.findAll();
+    }
+
+    public List<Classroom> findBySubject(Subject subject) {
+        return classroomRepository.findBySubject(subject);
     }
 
     // READ - Find classroom by ID
