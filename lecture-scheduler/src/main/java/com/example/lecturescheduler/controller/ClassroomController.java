@@ -37,14 +37,12 @@ public class ClassroomController {
         return classroomService.saveClassroom(classroom);
     }
 
-    // PUT Update Classroom
     @PutMapping("/{id}")
     public ResponseEntity<Classroom> updateClassroom(@PathVariable Long id, @RequestBody Classroom classroomDetails) {
         Classroom updatedClassroom = classroomService.updateClassroom(id, classroomDetails);
         return ResponseEntity.ok(updatedClassroom);
     }
 
-    // DELETE Classroom
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteClassroom(@PathVariable Long id) {
         classroomService.deleteClassroom(id);

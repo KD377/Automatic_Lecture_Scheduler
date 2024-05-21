@@ -21,7 +21,7 @@ public class Subject {
     private Long id;
     private String name;
     private String courseLevel;
-    private int courseLength; // Number of hours during the semester which is 15 weeks long
+    private int courseLength;
 
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Classroom> classrooms;
