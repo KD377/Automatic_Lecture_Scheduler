@@ -26,12 +26,10 @@ public class SubjectService {
         this.classroomRepository = classroomRepository;
     }
 
-    // CREATE
     public Subject saveSubject(Subject subject) {
         return subjectRepository.save(subject);
     }
 
-    // READ
     public List<Subject> findAllSubjects() {
         return subjectRepository.findAll();
     }
@@ -65,18 +63,15 @@ public class SubjectService {
         return subjectRepository.findById(id);
     }
 
-    // UPDATE
     public Subject updateSubject(Long id, Subject subjectDetails) {
         Subject subject = subjectRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Subject not found for this id :: " + id));
         subject.setName(subjectDetails.getName());
         subject.setCourseLevel(subjectDetails.getCourseLevel());
         subject.setCourseLength(subjectDetails.getCourseLength());
-        // Możliwe aktualizacje dla listy classrooms pominięte dla uproszczenia
         return subjectRepository.save(subject);
     }
 
-    // Method to add a classroom to a subject
     public Subject addClassroomToSubject(Long subjectId, Long classroomId) {
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new ResourceNotFoundException("Subject not found for this id :: " + subjectId));
@@ -86,7 +81,6 @@ public class SubjectService {
         return subjectRepository.save(subject);
     }
 
-    // Method to remove a classroom from a subject
     public Subject removeClassroomFromSubject(Long subjectId, Long classroomId) {
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new ResourceNotFoundException("Subject not found for this id :: " + subjectId));
@@ -94,7 +88,6 @@ public class SubjectService {
         return subjectRepository.save(subject);
     }
 
-    // DELETE
     public void deleteSubject(Long id) {
         Subject subject = subjectRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Subject not found for this id :: " + id));

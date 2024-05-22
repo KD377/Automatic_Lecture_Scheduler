@@ -130,7 +130,6 @@ public class PopulationGenerator {
                 stack.push(subject);
             }
         }
-        // Shuffle the subjects
         List<Subject> list = new ArrayList<>(stack);
         Collections.shuffle(list);
 

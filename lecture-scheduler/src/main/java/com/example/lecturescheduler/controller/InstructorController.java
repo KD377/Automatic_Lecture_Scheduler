@@ -20,13 +20,11 @@ public class InstructorController {
         this.instructorService = instructorService;
     }
 
-    // GET All Instructors
     @GetMapping
     public List<Instructor> getAllInstructors() {
         return instructorService.findAllInstructors();
     }
 
-    // GET Instructor by ID
     @GetMapping("/{id}")
     public ResponseEntity<Instructor> getInstructorById(@PathVariable Long id) {
         Instructor instructor = instructorService.findInstructorById(id)
@@ -34,20 +32,17 @@ public class InstructorController {
         return ResponseEntity.ok().body(instructor);
     }
 
-    // POST Create Instructor
     @PostMapping
     public Instructor createInstructor(@RequestBody Instructor instructor) {
         return instructorService.saveInstructor(instructor);
     }
 
-    // PUT Update Instructor
     @PutMapping("/{id}")
     public ResponseEntity<Instructor> updateInstructor(@PathVariable Long id, @RequestBody Instructor instructorDetails) {
         Instructor updatedInstructor = instructorService.updateInstructor(id, instructorDetails);
         return ResponseEntity.ok(updatedInstructor);
     }
 
-    // DELETE Instructor
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteInstructor(@PathVariable Long id) {
         instructorService.deleteInstructor(id);
