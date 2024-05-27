@@ -21,10 +21,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/classrooms/**").permitAll()
                         .requestMatchers("/api/groups/**").permitAll()
                         .requestMatchers("/api/instructors/**").permitAll()
-                        .requestMatchers("/api/subjects/**").permitAll()// Zezwalaj na anonimowy dostęp do endpointów "/api/classrooms"
-                        .requestMatchers("/api/algorithm/**").permitAll()// Zezwalaj na anonimowy dostęp do endpointów "/api/classrooms"
-                        .anyRequest().authenticated()) // Wymaga uwierzytelnienia dla innych żądań
-                .httpBasic(withDefaults()); // Umożliwia uwierzytelnienie za pomocą HTTP Basic Authentication
+                        .requestMatchers("/api/subjects/**").permitAll()
+                        .requestMatchers("/api/algorithm/**").permitAll()
+                        .anyRequest().authenticated())
+                .httpBasic(AbstractHttpConfigurer::disable);
         return http.build();
     }
 }

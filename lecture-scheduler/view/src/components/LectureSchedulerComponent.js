@@ -1,25 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import '../css/LectureScheduler.css'; // Adjust the path based on your structure
+import '../css/LectureScheduler.css';
 
-const LectureScheduler = () => {
+const LectureSchedulerComponent = () => {
     const [schedules, setSchedules] = useState({});
+    const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
+    const fetchSchedules = () => {
+        setLoading(true);
         axios.get('/api/algorithm/trigger-genetic-algorithm')
             .then(response => {
                 setSchedules(response.data);
+                setLoading(false);
             })
             .catch(error => {
                 console.error("There was an error fetching the schedule data!", error);
+                setLoading(false);
             });
+    };
+
+    useEffect(() => {
+        fetchSchedules();
     }, []);
 
     return (
-        <div>
-            {Object.keys(schedules).map(groupName => (
-                <GroupSchedule key={groupName} groupName={groupName} sessions={schedules[groupName]} />
-            ))}
+        <div className="container mt-4">
+            <h1 className="text-center mb-4">Lecture Schedules</h1>
+            <div className="text-center mb-4">
+                <button onClick={fetchSchedules} className="btn btn-primary" disabled={loading}>
+                    {loading ? 'Generating...' : 'Generate Schedule'}
+                </button>
+            </div>
+            {Object.keys(schedules)
+                .sort((a, b) => a.localeCompare(b))  // Sort group names alphabetically
+                .map(groupName => (
+                    <GroupSchedule key={groupName} groupName={groupName} sessions={schedules[groupName]} />
+                ))}
         </div>
     );
 };
@@ -27,10 +43,8 @@ const LectureScheduler = () => {
 const GroupSchedule = ({ groupName, sessions }) => {
     const daysOfWeek = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"];
 
-    // Determine the maximum number of time slots for this group
     const maxTimeSlot = Math.max(...sessions.map(session => session.numberOfTimeSlot));
 
-    // Generate an array of time slots up to the maximum number
     const timeSlots = Array.from({ length: maxTimeSlot }, (_, i) => i + 1);
 
     const generateTableData = () => {
@@ -53,14 +67,14 @@ const GroupSchedule = ({ groupName, sessions }) => {
     const tableData = generateTableData();
 
     return (
-        <div>
-            <h3>{groupName}</h3>
-            <table className="schedule-table">
-                <thead>
+        <div className="mb-4">
+            <h3 className="text-center">{groupName}</h3>
+            <table className="table table-bordered">
+                <thead className="thead-light">
                 <tr>
-                    <th>Day/Time Slot</th>
+                    <th scope="col">Day/Time Slot</th>
                     {timeSlots.map(slot => (
-                        <th key={slot}>{slot}</th>
+                        <th key={slot} scope="col">{slot}</th>
                     ))}
                 </tr>
                 </thead>
@@ -81,4 +95,4 @@ const GroupSchedule = ({ groupName, sessions }) => {
     );
 };
 
-export default LectureScheduler;
+export default LectureSchedulerComponent;
