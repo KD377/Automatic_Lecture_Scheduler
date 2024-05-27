@@ -21,8 +21,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/classrooms/**").permitAll()
                         .requestMatchers("/api/groups/**").permitAll()
                         .requestMatchers("/api/instructors/**").permitAll()
-                        .requestMatchers("/api/subjects/**").permitAll()// Zezwalaj na anonimowy dostęp do endpointów "/api/classrooms"
-                        .requestMatchers("/api/algorithm/**").permitAll()// Zezwalaj na anonimowy dostęp do endpointów "/api/classrooms"
+                        .requestMatchers("/api/subjects/**").permitAll()
+                        .requestMatchers("/api/algorithm/**").permitAll()
                         .requestMatchers("/windows/home").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(withDefaults())// Umożliwia uwierzytelnienie za pomocą OAuth 2.0

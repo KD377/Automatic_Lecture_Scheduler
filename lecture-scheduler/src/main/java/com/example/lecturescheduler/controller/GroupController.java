@@ -20,13 +20,11 @@ public class GroupController {
         this.groupService = groupService;
     }
 
-    // GET All Groups
     @GetMapping
     public List<SingleGroup> getAllGroups() {
         return groupService.findAllGroups();
     }
 
-    // GET Group by ID
     @GetMapping("/{id}")
     public ResponseEntity<SingleGroup> getGroupById(@PathVariable Long id) {
         SingleGroup group = groupService.findGroupById(id)
@@ -34,20 +32,17 @@ public class GroupController {
         return ResponseEntity.ok().body(group);
     }
 
-    // POST Create Group
     @PostMapping
     public SingleGroup createGroup(@RequestBody SingleGroup group) {
         return groupService.saveGroup(group);
     }
 
-    // PUT Update Group
     @PutMapping("/{id}")
     public ResponseEntity<SingleGroup> updateGroup(@PathVariable Long id, @RequestBody SingleGroup groupDetails) {
         SingleGroup updatedGroup = groupService.updateGroup(id, groupDetails);
         return ResponseEntity.ok(updatedGroup);
     }
 
-    // DELETE Group
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteGroup(@PathVariable Long id) {
         groupService.deleteGroup(id);

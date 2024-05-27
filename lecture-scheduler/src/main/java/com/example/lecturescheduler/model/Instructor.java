@@ -32,19 +32,15 @@ public class Instructor {
     private List<Subject> subjectsTaught;
 
     @ElementCollection
-    private List<Boolean> availability; // Lista przedziałów czasowych dostępności
-
-    @ElementCollection
-    private List<Boolean> preferences; // Lista przedziałów czasowych preferencji
+    private List<Boolean> preferences;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private List<SingleGroup> groups; // Lista grup, w których nauczyciel może uczyć
+    private List<SingleGroup> groups;
 
-    public Instructor(String name, String department, List<Subject> subjectsTaught, List<Boolean> availability, List<Boolean> preferences, List<SingleGroup> groups) {
+    public Instructor(String name, String department, List<Subject> subjectsTaught, List<Boolean> preferences, List<SingleGroup> groups) {
         this.name = name;
         this.department = department;
         this.subjectsTaught = subjectsTaught;
-        this.availability = availability;
         this.preferences = preferences;
         this.groups = groups;
     }
