@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../css/LectureScheduler.css';
 
 const LectureSchedulerComponent = () => {
     const [schedules, setSchedules] = useState({});
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const fetchSchedules = () => {
         setLoading(true);
@@ -19,23 +21,28 @@ const LectureSchedulerComponent = () => {
             });
     };
 
-    useEffect(() => {
-        fetchSchedules();
-    }, []);
+    const handleGoBack = () => {
+        navigate('/');
+    };
 
     return (
         <div className="container mt-4">
             <h1 className="text-center mb-4">Lecture Schedules</h1>
             <div className="text-center mb-4">
-                <button onClick={fetchSchedules} className="btn btn-primary" disabled={loading}>
+                <button onClick={fetchSchedules} className="btn btn-primary mx-2" disabled={loading}>
                     {loading ? 'Generating...' : 'Generate Schedule'}
                 </button>
+                <button onClick={handleGoBack} className="btn btn-secondary mx-2">
+                    Go Back to Forms
+                </button>
             </div>
-            {Object.keys(schedules)
-                .sort((a, b) => a.localeCompare(b))  // Sort group names alphabetically
-                .map(groupName => (
-                    <GroupSchedule key={groupName} groupName={groupName} sessions={schedules[groupName]} />
-                ))}
+            {Object.keys(schedules).length > 0 && (
+                Object.keys(schedules)
+                    .sort((a, b) => a.localeCompare(b))  // Sort group names alphabetically
+                    .map(groupName => (
+                        <GroupSchedule key={groupName} groupName={groupName} sessions={schedules[groupName]} />
+                    ))
+            )}
         </div>
     );
 };
@@ -55,7 +62,7 @@ const GroupSchedule = ({ groupName, sessions }) => {
 
         sessions.forEach(session => {
             const { dayOfWeek, numberOfTimeSlot, lecturer, classroom, subjectName } = session;
-            const formattedData = `Subject: ${subjectName}\nClassroom: ${classroom}\nLecturer: ${lecturer}`;
+            const formattedData = `Subject: ${subjectName}<br />Classroom: ${classroom}<br />Lecturer: ${lecturer}`;
             if (tableData[dayOfWeek]) {
                 tableData[dayOfWeek][numberOfTimeSlot - 1] = formattedData;
             }
@@ -83,9 +90,7 @@ const GroupSchedule = ({ groupName, sessions }) => {
                     <tr key={day}>
                         <td>{day}</td>
                         {timeSlots.map((slot, index) => (
-                            <td key={index}>
-                                {tableData[day][index]}
-                            </td>
+                            <td key={index} dangerouslySetInnerHTML={{ __html: tableData[day][index] }} />
                         ))}
                     </tr>
                 ))}
