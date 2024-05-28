@@ -29,6 +29,7 @@ public class LectureSchedulerApplication {
 			Classroom classroom1 = new Classroom("101");
 			Classroom classroom2 = new Classroom("102");
 			Classroom classroom3 = new Classroom("103");
+			Classroom classroom4 = new Classroom("104");
 
 			// Create subjects
 			Subject subject1 = new Subject("Algorithms","Intermediate",15,null);
@@ -41,6 +42,7 @@ public class LectureSchedulerApplication {
 			classroom1.setSubjects(List.of(subject1, subject2, subject3,subject4,subject5));
 			classroom2.setSubjects(List.of(subject1, subject2, subject3,subject4,subject5));
 			classroom3.setSubjects(List.of(subject1, subject2, subject3,subject4,subject5));
+			classroom4.setSubjects(List.of(subject4));
 			subjectService.saveSubject(subject1);
 			subjectService.saveSubject(subject2);
 			subjectService.saveSubject(subject3);
