@@ -20,12 +20,10 @@ public class ClassroomService {
         this.classroomRepository = classroomRepository;
     }
 
-    // CREATE
     public Classroom saveClassroom(Classroom classroom) {
         return classroomRepository.save(classroom);
     }
 
-    // READ - Find all classrooms
     public List<Classroom> findAllClassrooms() {
         return classroomRepository.findAll();
     }
@@ -34,12 +32,10 @@ public class ClassroomService {
         return classroomRepository.findBySubject(subject);
     }
 
-    // READ - Find classroom by ID
     public Optional<Classroom> findClassroomById(Long id) {
         return classroomRepository.findById(id);
     }
 
-    // UPDATE
     public Classroom updateClassroom(Long id, Classroom classroomDetails) {
         Classroom classroom = classroomRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Classroom not found for this id :: " + id));
@@ -48,7 +44,6 @@ public class ClassroomService {
         return classroomRepository.save(classroom);
     }
 
-    // DELETE
     public void deleteClassroom(Long id) {
         Classroom classroom = classroomRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Classroom not found for this id :: " + id));

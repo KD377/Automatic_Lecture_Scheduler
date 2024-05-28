@@ -23,8 +23,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/instructors/**").permitAll()
                         .requestMatchers("/api/subjects/**").permitAll()
                         .requestMatchers("/api/algorithm/**").permitAll()
+                        .requestMatchers("/windows/home").permitAll()
                         .anyRequest().authenticated())
-                .httpBasic(AbstractHttpConfigurer::disable);
+                .oauth2Login(withDefaults())// Umożliwia uwierzytelnienie za pomocą OAuth 2.0
+                .httpBasic(withDefaults()); // Umożliwia uwierzytelnienie za pomocą HTTP Basic Authentication
         return http.build();
     }
+
 }

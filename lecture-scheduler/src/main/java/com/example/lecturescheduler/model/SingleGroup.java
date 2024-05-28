@@ -24,7 +24,6 @@ public class SingleGroup {
     private String programOfStudy;
     private int numberOfStudents;
 
-    // Relacja wiele-do-wielu z Instructor
     @ManyToMany(mappedBy = "groups", fetch = FetchType.LAZY)
     private List<Instructor> instructors;
 

@@ -27,7 +27,6 @@ public class InstructorService {
         this.groupRepository = groupRepository;
     }
 
-    // CREATE
     public Instructor saveInstructor(Instructor instructor) {
         return instructorRepository.save(instructor);
     }
@@ -36,17 +35,14 @@ public class InstructorService {
         return instructorRepository.findBySubject(subject);
     }
 
-    // READ - Find all instructors
     public List<Instructor> findAllInstructors() {
         return instructorRepository.findAll();
     }
 
-    // READ - Find instructor by ID
     public Optional<Instructor> findInstructorById(Long id) {
         return instructorRepository.findById(id);
     }
 
-    // UPDATE
     public Instructor updateInstructor(Long id, Instructor instructorDetails) {
         Instructor instructor = instructorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Instructor not found for this id :: " + id));
@@ -57,7 +53,6 @@ public class InstructorService {
         return instructorRepository.save(instructor);
     }
 
-    // DELETE
     public void deleteInstructor(Long id) {
         Instructor instructor = instructorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Instructor not found for this id :: " + id));
