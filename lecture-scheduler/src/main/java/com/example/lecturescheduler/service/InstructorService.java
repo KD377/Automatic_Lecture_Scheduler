@@ -50,6 +50,7 @@ public class InstructorService {
         instructor.setDepartment(instructorDetails.getDepartment());
         instructor.setSubjectsTaught(instructorDetails.getSubjectsTaught());
         instructor.setPreferences(instructorDetails.getPreferences());
+        instructor.setGroups(instructorDetails.getGroups());
         return instructorRepository.save(instructor);
     }
 

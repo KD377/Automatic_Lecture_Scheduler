@@ -1,12 +1,6 @@
 package com.example.lecturescheduler.model;
 
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -34,7 +28,12 @@ public class Instructor {
     @ElementCollection
     private List<Boolean> preferences;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "instructor_groups",
+            joinColumns = @JoinColumn(name = "instructor_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
     private List<SingleGroup> groups;
 
     public Instructor(String name, String department, List<Subject> subjectsTaught, List<Boolean> preferences, List<SingleGroup> groups) {
