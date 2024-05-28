@@ -6,6 +6,8 @@ const SubjectComponent = () => {
     const [courseLevel, setCourseLevel] = useState('');
     const [courseLength, setCourseLength] = useState(0);
     const [subjects, setSubjects] = useState([]);
+    const [editMode, setEditMode] = useState(false);
+    const [editSubjectId, setEditSubjectId] = useState(null);
 
     useEffect(() => {
         fetchSubjects();
@@ -19,15 +21,27 @@ const SubjectComponent = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('/api/subjects', { name, courseLevel, courseLength })
-            .then(response => {
-                console.log('Subject added:', response.data);
-                setName('');
-                setCourseLevel('');
-                setCourseLength(0);
-                fetchSubjects();
-            })
-            .catch(error => console.error('Error adding subject:', error));
+        const subjectData = { name, courseLevel, courseLength };
+        if (editMode) {
+            axios.put(`/api/subjects/${editSubjectId}`, subjectData)
+                .then(response => {
+                    console.log('Subject updated:', response.data);
+                    setEditMode(false);
+                    setEditSubjectId(null);
+                    fetchSubjects();
+                })
+                .catch(error => console.error('Error updating subject:', error));
+        } else {
+            axios.post('/api/subjects', subjectData)
+                .then(response => {
+                    console.log('Subject added:', response.data);
+                    fetchSubjects();
+                })
+                .catch(error => console.error('Error adding subject:', error));
+        }
+        setName('');
+        setCourseLevel('');
+        setCourseLength(0);
     };
 
     const handleDeleteSubject = (id) => {
@@ -39,10 +53,18 @@ const SubjectComponent = () => {
             .catch(error => console.error('Error deleting subject:', error));
     };
 
+    const handleEditSubject = (subject) => {
+        setName(subject.name);
+        setCourseLevel(subject.courseLevel);
+        setCourseLength(subject.courseLength);
+        setEditSubjectId(subject.id);
+        setEditMode(true);
+    };
+
     return (
         <div>
             <form onSubmit={handleSubmit} className="mb-4">
-                <h3>Add Subject</h3>
+                <h3>{editMode ? 'Update Subject' : 'Add Subject'}</h3>
                 <div className="mb-3">
                     <label htmlFor="subjectName" className="form-label">Subject Name</label>
                     <input
@@ -79,7 +101,18 @@ const SubjectComponent = () => {
                         required
                     />
                 </div>
-                <button type="submit" className="btn btn-primary">Add Subject</button>
+                <button type="submit" className="btn btn-primary">{editMode ? 'Update Subject' : 'Add Subject'}</button>
+                {editMode && (
+                    <button type="button" className="btn btn-secondary ms-2" onClick={() => {
+                        setEditMode(false);
+                        setEditSubjectId(null);
+                        setName('');
+                        setCourseLevel('');
+                        setCourseLength(0);
+                    }}>
+                        Cancel
+                    </button>
+                )}
             </form>
 
             <div className="mt-4">
@@ -101,6 +134,12 @@ const SubjectComponent = () => {
                                 <td>{subject.courseLevel}</td>
                                 <td>{subject.courseLength}</td>
                                 <td>
+                                    <button
+                                        onClick={() => handleEditSubject(subject)}
+                                        className="btn btn-warning btn-sm me-2"
+                                    >
+                                        Update
+                                    </button>
                                     <button
                                         onClick={() => handleDeleteSubject(subject.id)}
                                         className="btn btn-danger btn-sm"

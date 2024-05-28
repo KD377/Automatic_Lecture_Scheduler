@@ -6,6 +6,8 @@ const ClassroomComponent = () => {
     const [availableSubjects, setAvailableSubjects] = useState([]);
     const [selectedSubjects, setSelectedSubjects] = useState([]);
     const [classrooms, setClassrooms] = useState([]);
+    const [editMode, setEditMode] = useState(false);
+    const [editClassroomId, setEditClassroomId] = useState(null);
 
     useEffect(() => {
         fetchClassrooms();
@@ -22,14 +24,26 @@ const ClassroomComponent = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('/api/classrooms', { name, subjects: selectedSubjects })
-            .then(response => {
-                console.log('Classroom added:', response.data);
-                setName('');
-                setSelectedSubjects([]);
-                fetchClassrooms();
-            })
-            .catch(error => console.error('Error adding classroom:', error));
+        const classroomData = { name, subjects: selectedSubjects };
+        if (editMode) {
+            axios.put(`/api/classrooms/${editClassroomId}`, classroomData)
+                .then(response => {
+                    console.log('Classroom updated:', response.data);
+                    setEditMode(false);
+                    setEditClassroomId(null);
+                    fetchClassrooms();
+                })
+                .catch(error => console.error('Error updating classroom:', error));
+        } else {
+            axios.post('/api/classrooms', classroomData)
+                .then(response => {
+                    console.log('Classroom added:', response.data);
+                    fetchClassrooms();
+                })
+                .catch(error => console.error('Error adding classroom:', error));
+        }
+        setName('');
+        setSelectedSubjects([]);
     };
 
     const handleSubjectChange = (subject) => {
@@ -40,6 +54,13 @@ const ClassroomComponent = () => {
                 return [...prevSelectedSubjects, subject];
             }
         });
+    };
+
+    const handleEditClassroom = (classroom) => {
+        setName(classroom.name);
+        setSelectedSubjects(classroom.subjects);
+        setEditClassroomId(classroom.id);
+        setEditMode(true);
     };
 
     const handleDeleteClassroom = (id) => {
@@ -54,7 +75,7 @@ const ClassroomComponent = () => {
     return (
         <div>
             <form onSubmit={handleSubmit} className="mb-4">
-                <h3>Add Classroom</h3>
+                <h3>{editMode ? 'Update Classroom' : 'Add Classroom'}</h3>
                 <div className="mb-3">
                     <label htmlFor="classroomName" className="form-label">Classroom Name</label>
                     <input
@@ -87,7 +108,17 @@ const ClassroomComponent = () => {
                         ))}
                     </div>
                 </div>
-                <button type="submit" className="btn btn-primary">Add Classroom</button>
+                <button type="submit" className="btn btn-primary">{editMode ? 'Update Classroom' : 'Add Classroom'}</button>
+                {editMode && (
+                    <button type="button" className="btn btn-secondary ms-2" onClick={() => {
+                        setEditMode(false);
+                        setEditClassroomId(null);
+                        setName('');
+                        setSelectedSubjects([]);
+                    }}>
+                        Cancel
+                    </button>
+                )}
             </form>
 
             <div className="mt-4">
@@ -113,6 +144,12 @@ const ClassroomComponent = () => {
                                     </ul>
                                 </td>
                                 <td style={{ width: '20%' }}>
+                                    <button
+                                        onClick={() => handleEditClassroom(classroom)}
+                                        className="btn btn-warning btn-sm me-2"  // Yellow update button
+                                    >
+                                        Update
+                                    </button>
                                     <button
                                         onClick={() => handleDeleteClassroom(classroom.id)}
                                         className="btn btn-danger btn-sm"

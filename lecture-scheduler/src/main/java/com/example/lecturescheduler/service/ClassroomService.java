@@ -44,6 +44,7 @@ public class ClassroomService {
         Classroom classroom = classroomRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Classroom not found for this id :: " + id));
         classroom.setName(classroomDetails.getName());
+        classroom.setSubjects(classroomDetails.getSubjects());
         return classroomRepository.save(classroom);
     }
 

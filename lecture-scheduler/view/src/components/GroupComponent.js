@@ -6,6 +6,8 @@ const GroupComponent = () => {
     const [programOfStudy, setProgramOfStudy] = useState('');
     const [numberOfStudents, setNumberOfStudents] = useState(0);
     const [groups, setGroups] = useState([]);
+    const [editMode, setEditMode] = useState(false);
+    const [editGroupId, setEditGroupId] = useState(null);
 
     useEffect(() => {
         fetchGroups();
@@ -19,15 +21,37 @@ const GroupComponent = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post('/api/groups', { name, programOfStudy, numberOfStudents })
-            .then(response => {
-                console.log('Group added:', response.data);
-                setName('');
-                setProgramOfStudy('');
-                setNumberOfStudents(0);
-                fetchGroups(); // Refresh the list of groups
-            })
-            .catch(error => console.error('Error adding group:', error));
+        const groupData = { name, programOfStudy, numberOfStudents };
+
+        if (editMode) {
+            axios.put(`/api/groups/${editGroupId}`, groupData)
+                .then(response => {
+                    console.log('Group updated:', response.data);
+                    setEditMode(false);
+                    setEditGroupId(null);
+                    fetchGroups();
+                })
+                .catch(error => console.error('Error updating group:', error));
+        } else {
+            axios.post('/api/groups', groupData)
+                .then(response => {
+                    console.log('Group added:', response.data);
+                    fetchGroups();
+                })
+                .catch(error => console.error('Error adding group:', error));
+        }
+
+        setName('');
+        setProgramOfStudy('');
+        setNumberOfStudents(0);
+    };
+
+    const handleEditGroup = (group) => {
+        setName(group.name);
+        setProgramOfStudy(group.programOfStudy);
+        setNumberOfStudents(group.numberOfStudents);
+        setEditGroupId(group.id);
+        setEditMode(true);
     };
 
     const handleDeleteGroup = (id) => {
@@ -42,7 +66,7 @@ const GroupComponent = () => {
     return (
         <div>
             <form onSubmit={handleSubmit} className="mb-4">
-                <h3>Add Group</h3>
+                <h3>{editMode ? 'Update Group' : 'Add Group'}</h3>
                 <div className="mb-3">
                     <label htmlFor="groupName" className="form-label">Group Name</label>
                     <input
@@ -79,7 +103,18 @@ const GroupComponent = () => {
                         required
                     />
                 </div>
-                <button type="submit" className="btn btn-primary">Add Group</button>
+                <button type="submit" className="btn btn-primary">{editMode ? 'Update Group' : 'Add Group'}</button>
+                {editMode && (
+                    <button type="button" className="btn btn-secondary ms-2" onClick={() => {
+                        setEditMode(false);
+                        setEditGroupId(null);
+                        setName('');
+                        setProgramOfStudy('');
+                        setNumberOfStudents(0);
+                    }}>
+                        Cancel
+                    </button>
+                )}
             </form>
 
             <div className="mt-4">
@@ -101,6 +136,12 @@ const GroupComponent = () => {
                                 <td>{group.programOfStudy}</td>
                                 <td>{group.numberOfStudents}</td>
                                 <td>
+                                    <button
+                                        onClick={() => handleEditGroup(group)}
+                                        className="btn btn-warning btn-sm me-2"
+                                    >
+                                        Update
+                                    </button>
                                     <button
                                         onClick={() => handleDeleteGroup(group.id)}
                                         className="btn btn-danger btn-sm"

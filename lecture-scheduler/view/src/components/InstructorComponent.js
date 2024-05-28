@@ -8,6 +8,8 @@ const InstructorComponent = () => {
     const [preferences, setPreferences] = useState([false, false, false, false, false]); // Default preferences for Mon-Fri
     const [availableSubjects, setAvailableSubjects] = useState([]);
     const [instructors, setInstructors] = useState([]);
+    const [editMode, setEditMode] = useState(false);
+    const [editInstructorId, setEditInstructorId] = useState(null);
 
     useEffect(() => {
         fetchSubjects();
@@ -30,16 +32,30 @@ const InstructorComponent = () => {
         e.preventDefault();
         const selectedSubjects = subjectsTaught.map(id => availableSubjects.find(subject => subject.id === parseInt(id)));
 
-        axios.post('/api/instructors', { name, department, subjectsTaught: selectedSubjects, preferences })
-            .then(response => {
-                console.log('Instructor added:', response.data);
-                setName('');
-                setDepartment('');
-                setSubjectsTaught([]);
-                setPreferences([false, false, false, false, false]);
-                fetchInstructors(); // Refresh the list of instructors
-            })
-            .catch(error => console.error('Error adding instructor:', error));
+        const instructorData = { name, department, subjectsTaught: selectedSubjects, preferences };
+
+        if (editMode) {
+            axios.put(`/api/instructors/${editInstructorId}`, instructorData)
+                .then(response => {
+                    console.log('Instructor updated:', response.data);
+                    setEditMode(false);
+                    setEditInstructorId(null);
+                    fetchInstructors();
+                })
+                .catch(error => console.error('Error updating instructor:', error));
+        } else {
+            axios.post('/api/instructors', instructorData)
+                .then(response => {
+                    console.log('Instructor added:', response.data);
+                    fetchInstructors();
+                })
+                .catch(error => console.error('Error adding instructor:', error));
+        }
+
+        setName('');
+        setDepartment('');
+        setSubjectsTaught([]);
+        setPreferences([false, false, false, false, false]);
     };
 
     const handleSubjectChange = (subjectId) => {
@@ -67,10 +83,19 @@ const InstructorComponent = () => {
             .catch(error => console.error('Error deleting instructor:', error));
     };
 
+    const handleEditInstructor = (instructor) => {
+        setName(instructor.name);
+        setDepartment(instructor.department);
+        setSubjectsTaught(instructor.subjectsTaught.map(subject => subject.id));
+        setPreferences(instructor.preferences);
+        setEditInstructorId(instructor.id);
+        setEditMode(true);
+    };
+
     return (
         <div>
             <form onSubmit={handleSubmit} className="mb-4">
-                <h3>Add Instructor</h3>
+                <h3>{editMode ? 'Update Instructor' : 'Add Instructor'}</h3>
                 <div className="mb-3">
                     <label htmlFor="instructorName" className="form-label">Instructor Name</label>
                     <input
@@ -96,7 +121,7 @@ const InstructorComponent = () => {
                     />
                 </div>
                 <div className="mb-3">
-                    <label className="form-label">Subjects Taught</label>
+                    <label className="form-label">Available Subjects</label>
                     <div className="form-group" style={{ maxHeight: '150px', overflowY: 'auto', border: '1px solid #ced4da', padding: '10px' }}>
                         {availableSubjects.map(subject => (
                             <div key={subject.id} className="form-check">
@@ -168,7 +193,19 @@ const InstructorComponent = () => {
                         <label className="form-check-label" htmlFor="fridayPreference">Friday</label>
                     </div>
                 </div>
-                <button type="submit" className="btn btn-primary">Add Instructor</button>
+                <button type="submit" className="btn btn-primary">{editMode ? 'Update Instructor' : 'Add Instructor'}</button>
+                {editMode && (
+                    <button type="button" className="btn btn-secondary ms-2" onClick={() => {
+                        setEditMode(false);
+                        setEditInstructorId(null);
+                        setName('');
+                        setDepartment('');
+                        setSubjectsTaught([]);
+                        setPreferences([false, false, false, false, false]);
+                    }}>
+                        Cancel
+                    </button>
+                )}
             </form>
 
             <div className="mt-4" style={{ marginBottom: '100px' }}>
@@ -204,6 +241,12 @@ const InstructorComponent = () => {
                                     </ul>
                                 </td>
                                 <td>
+                                    <button
+                                        onClick={() => handleEditInstructor(instructor)}
+                                        className="btn btn-warning btn-sm me-2"
+                                    >
+                                        Update
+                                    </button>
                                     <button
                                         onClick={() => handleDeleteInstructor(instructor.id)}
                                         className="btn btn-danger btn-sm"
