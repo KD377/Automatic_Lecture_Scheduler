@@ -69,6 +69,7 @@ public class SubjectService {
         subject.setName(subjectDetails.getName());
         subject.setCourseLevel(subjectDetails.getCourseLevel());
         subject.setCourseLength(subjectDetails.getCourseLength());
+        subject.setClassrooms(subjectDetails.getClassrooms());
         return subjectRepository.save(subject);
     }
 
