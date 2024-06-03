@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../css/LectureScheduler.css';
+import jsPDF from 'jspdf';
 
 const LectureSchedulerComponent = () => {
     const [schedules, setSchedules] = useState({});
@@ -25,6 +26,35 @@ const LectureSchedulerComponent = () => {
         navigate('/');
     };
 
+    const generatePDF = () => {
+        const doc = new jsPDF();
+        let yPos = 10;
+
+        Object.keys(schedules).forEach((groupName, groupIndex) => {
+            doc.text(`Schedule for ${groupName}`, 10, yPos);
+            yPos += 10;
+
+            const sessions = schedules[groupName];
+            const maxTimeSlot = Math.max(...sessions.map(session => session.numberOfTimeSlot));
+            const timeSlots = Array.from({ length: maxTimeSlot }, (_, i) => i + 1);
+            const daysOfWeek = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"];
+
+            daysOfWeek.forEach(day => {
+                sessions.forEach(session => {
+                    if (session.dayOfWeek === day) {
+                        const text = `Time Slot ${session.numberOfTimeSlot}: ${session.subjectName}, ${session.classroom}, ${session.lecturer}`;
+                        doc.text(text, 10, yPos);
+                        yPos += 10;
+                    }
+                });
+                yPos += 5;
+            });
+            yPos += 10;
+        });
+
+        doc.save('All_Schedules.pdf');
+    };
+
     return (
         <div className="container mt-4">
             <h1 className="text-center mb-4">Lecture Schedules</h1>
@@ -32,13 +62,14 @@ const LectureSchedulerComponent = () => {
                 <button onClick={fetchSchedules} className="btn btn-primary mx-2" disabled={loading}>
                     {loading ? 'Generating...' : 'Generate Schedule'}
                 </button>
+                <button onClick={generatePDF} className="btn btn-info mx-2">Download All Schedules as PDF</button>
                 <button onClick={handleGoBack} className="btn btn-secondary mx-2">
                     Go Back to Forms
                 </button>
             </div>
             {Object.keys(schedules).length > 0 && (
                 Object.keys(schedules)
-                    .sort((a, b) => a.localeCompare(b))  // Sort group names alphabetically
+                    .sort((a, b) => a.localeCompare(b))
                     .map(groupName => (
                         <GroupSchedule key={groupName} groupName={groupName} sessions={schedules[groupName]} />
                     ))
