@@ -60,11 +60,13 @@ const LectureSchedulerComponent = () => {
             });
 
             const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+
+            const colWidths = worksheetData[0].map((col, idx) =>
+                Math.max(...worksheetData.map(row => (row[idx] ? row[idx].toString().length : 10))) + 2
+            );
+            ws['!cols'] = colWidths.map(width => ({ wch: width }));
+
             XLSX.utils.book_append_sheet(wb, ws, groupName);
-
-            const colWidths = [{ wch: 30 }, ...Array(maxTimeSlot).fill({ wch: 30 })];
-            ws['!cols'] = colWidths;
-
         });
 
         XLSX.writeFile(wb, 'Selected_Schedules.xlsx');
