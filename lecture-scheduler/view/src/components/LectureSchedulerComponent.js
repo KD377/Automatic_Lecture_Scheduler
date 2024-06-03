@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import * as XLSX from 'xlsx';
 import '../css/LectureScheduler.css';
 
 const LectureSchedulerComponent = () => {
     const [schedules, setSchedules] = useState({});
+    const [selectedSchedules, setSelectedSchedules] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -21,8 +23,53 @@ const LectureSchedulerComponent = () => {
             });
     };
 
+    const handleCheckboxChange = (groupName) => {
+        setSelectedSchedules(prev =>
+            prev.includes(groupName) ? prev.filter(name => name !== groupName) : [...prev, groupName]
+        );
+    };
+
     const handleGoBack = () => {
         navigate('/');
+    };
+
+    const generateExcel = () => {
+        const wb = XLSX.utils.book_new();
+
+        selectedSchedules.forEach((groupName) => {
+            const groupSchedules = schedules[groupName];
+
+            const worksheetData = [
+                ["Day/Time Slot", ...Array.from({ length: 5 }, (_, i) => i + 1)]
+            ];
+
+            const daysOfWeek = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"];
+            const maxTimeSlot = Math.max(...groupSchedules.map(session => session.numberOfTimeSlot));
+
+            daysOfWeek.forEach(day => {
+                const row = [day];
+                for (let i = 1; i <= maxTimeSlot; i++) {
+                    const session = groupSchedules.find(s => s.dayOfWeek === day && s.numberOfTimeSlot === i);
+                    if (session) {
+                        row.push(`Subject: ${session.subjectName}, Classroom: ${session.classroom}, Lecturer: ${session.lecturer}`);
+                    } else {
+                        row.push("");
+                    }
+                }
+                worksheetData.push(row);
+            });
+
+            const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+
+            const colWidths = worksheetData[0].map((col, idx) =>
+                Math.max(...worksheetData.map(row => (row[idx] ? row[idx].toString().length : 10))) + 2
+            );
+            ws['!cols'] = colWidths.map(width => ({ wch: width }));
+
+            XLSX.utils.book_append_sheet(wb, ws, groupName);
+        });
+
+        XLSX.writeFile(wb, 'Selected_Schedules.xlsx');
     };
 
     return (
@@ -32,22 +79,31 @@ const LectureSchedulerComponent = () => {
                 <button onClick={fetchSchedules} className="btn btn-primary mx-2" disabled={loading}>
                     {loading ? 'Generating...' : 'Generate Schedule'}
                 </button>
-                <button onClick={handleGoBack} className="btn btn-secondary mx-2">
+                <button onClick={generateExcel} className="btn btn-info mx-2" disabled={selectedSchedules.length === 0}>
+                    Download Selected Schedules as Excel
+                </button>
+                <button onClick={() => navigate('/')} className="btn btn-secondary mx-2">
                     Go Back to Forms
                 </button>
             </div>
             {Object.keys(schedules).length > 0 && (
                 Object.keys(schedules)
-                    .sort((a, b) => a.localeCompare(b))  // Sort group names alphabetically
+                    .sort((a, b) => a.localeCompare(b))
                     .map(groupName => (
-                        <GroupSchedule key={groupName} groupName={groupName} sessions={schedules[groupName]} />
+                        <GroupSchedule
+                            key={groupName}
+                            groupName={groupName}
+                            sessions={schedules[groupName]}
+                            isChecked={selectedSchedules.includes(groupName)}
+                            onCheckboxChange={() => handleCheckboxChange(groupName)}
+                        />
                     ))
             )}
         </div>
     );
 };
 
-const GroupSchedule = ({ groupName, sessions }) => {
+const GroupSchedule = ({ groupName, sessions, isChecked, onCheckboxChange}) => {
     const daysOfWeek = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"];
 
     const maxTimeSlot = Math.max(...sessions.map(session => session.numberOfTimeSlot));
@@ -62,7 +118,7 @@ const GroupSchedule = ({ groupName, sessions }) => {
 
         sessions.forEach(session => {
             const { dayOfWeek, numberOfTimeSlot, lecturer, classroom, subjectName } = session;
-            const formattedData = `Subject: ${subjectName}<br />Classroom: ${classroom}<br />Lecturer: ${lecturer}`;
+            const formattedData = `Subject: ${subjectName}, Classroom: ${classroom}, Lecturer: ${lecturer}`;
             if (tableData[dayOfWeek]) {
                 tableData[dayOfWeek][numberOfTimeSlot - 1] = formattedData;
             }
@@ -76,7 +132,12 @@ const GroupSchedule = ({ groupName, sessions }) => {
     return (
         <div className="mb-4">
             <h3 className="text-center">{groupName}</h3>
-            <table className="table table-bordered">
+            <input
+                type="checkbox"
+                checked={isChecked}
+                onChange={onCheckboxChange}
+            />
+            <table className="table table-bordered" id={`table-${groupName}`}>
                 <thead className="thead-light">
                 <tr>
                     <th scope="col">Day/Time Slot</th>
