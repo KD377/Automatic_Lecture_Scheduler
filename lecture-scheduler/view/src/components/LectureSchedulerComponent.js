@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import * as XLSX from 'xlsx';
 import '../css/LectureScheduler.css';
-import jsPDF from 'jspdf';
 
 const LectureSchedulerComponent = () => {
     const [schedules, setSchedules] = useState({});
+    const [selectedSchedules, setSelectedSchedules] = useState([]);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -22,37 +23,51 @@ const LectureSchedulerComponent = () => {
             });
     };
 
+    const handleCheckboxChange = (groupName) => {
+        setSelectedSchedules(prev =>
+            prev.includes(groupName) ? prev.filter(name => name !== groupName) : [...prev, groupName]
+        );
+    };
+
     const handleGoBack = () => {
         navigate('/');
     };
 
-    const generatePDF = () => {
-        const doc = new jsPDF();
-        let yPos = 10;
+    const generateExcel = () => {
+        const wb = XLSX.utils.book_new();
 
-        Object.keys(schedules).forEach((groupName, groupIndex) => {
-            doc.text(`Schedule for ${groupName}`, 10, yPos);
-            yPos += 10;
+        selectedSchedules.forEach((groupName) => {
+            const groupSchedules = schedules[groupName];
 
-            const sessions = schedules[groupName];
-            const maxTimeSlot = Math.max(...sessions.map(session => session.numberOfTimeSlot));
-            const timeSlots = Array.from({ length: maxTimeSlot }, (_, i) => i + 1);
+            const worksheetData = [
+                ["Day/Time Slot", ...Array.from({ length: 5 }, (_, i) => i + 1)]
+            ];
+
             const daysOfWeek = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"];
+            const maxTimeSlot = Math.max(...groupSchedules.map(session => session.numberOfTimeSlot));
 
             daysOfWeek.forEach(day => {
-                sessions.forEach(session => {
-                    if (session.dayOfWeek === day) {
-                        const text = `Time Slot ${session.numberOfTimeSlot}: ${session.subjectName}, ${session.classroom}, ${session.lecturer}`;
-                        doc.text(text, 10, yPos);
-                        yPos += 10;
+                const row = [day];
+                for (let i = 1; i <= maxTimeSlot; i++) {
+                    const session = groupSchedules.find(s => s.dayOfWeek === day && s.numberOfTimeSlot === i);
+                    if (session) {
+                        row.push(`Subject: ${session.subjectName}, Classroom: ${session.classroom}, Lecturer: ${session.lecturer}`);
+                    } else {
+                        row.push("");
                     }
-                });
-                yPos += 5;
+                }
+                worksheetData.push(row);
             });
-            yPos += 10;
+
+            const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+            XLSX.utils.book_append_sheet(wb, ws, groupName);
+
+            const colWidths = [{ wch: 30 }, ...Array(maxTimeSlot).fill({ wch: 30 })];
+            ws['!cols'] = colWidths;
+
         });
 
-        doc.save('All_Schedules.pdf');
+        XLSX.writeFile(wb, 'Selected_Schedules.xlsx');
     };
 
     return (
@@ -62,8 +77,10 @@ const LectureSchedulerComponent = () => {
                 <button onClick={fetchSchedules} className="btn btn-primary mx-2" disabled={loading}>
                     {loading ? 'Generating...' : 'Generate Schedule'}
                 </button>
-                <button onClick={generatePDF} className="btn btn-info mx-2">Download All Schedules as PDF</button>
-                <button onClick={handleGoBack} className="btn btn-secondary mx-2">
+                <button onClick={generateExcel} className="btn btn-info mx-2" disabled={selectedSchedules.length === 0}>
+                    Download Selected Schedules as Excel
+                </button>
+                <button onClick={() => navigate('/')} className="btn btn-secondary mx-2">
                     Go Back to Forms
                 </button>
             </div>
@@ -71,14 +88,20 @@ const LectureSchedulerComponent = () => {
                 Object.keys(schedules)
                     .sort((a, b) => a.localeCompare(b))
                     .map(groupName => (
-                        <GroupSchedule key={groupName} groupName={groupName} sessions={schedules[groupName]} />
+                        <GroupSchedule
+                            key={groupName}
+                            groupName={groupName}
+                            sessions={schedules[groupName]}
+                            isChecked={selectedSchedules.includes(groupName)}
+                            onCheckboxChange={() => handleCheckboxChange(groupName)}
+                        />
                     ))
             )}
         </div>
     );
 };
 
-const GroupSchedule = ({ groupName, sessions }) => {
+const GroupSchedule = ({ groupName, sessions, isChecked, onCheckboxChange}) => {
     const daysOfWeek = ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"];
 
     const maxTimeSlot = Math.max(...sessions.map(session => session.numberOfTimeSlot));
@@ -93,7 +116,7 @@ const GroupSchedule = ({ groupName, sessions }) => {
 
         sessions.forEach(session => {
             const { dayOfWeek, numberOfTimeSlot, lecturer, classroom, subjectName } = session;
-            const formattedData = `Subject: ${subjectName}<br />Classroom: ${classroom}<br />Lecturer: ${lecturer}`;
+            const formattedData = `Subject: ${subjectName}, Classroom: ${classroom}, Lecturer: ${lecturer}`;
             if (tableData[dayOfWeek]) {
                 tableData[dayOfWeek][numberOfTimeSlot - 1] = formattedData;
             }
@@ -107,7 +130,12 @@ const GroupSchedule = ({ groupName, sessions }) => {
     return (
         <div className="mb-4">
             <h3 className="text-center">{groupName}</h3>
-            <table className="table table-bordered">
+            <input
+                type="checkbox"
+                checked={isChecked}
+                onChange={onCheckboxChange}
+            />
+            <table className="table table-bordered" id={`table-${groupName}`}>
                 <thead className="thead-light">
                 <tr>
                     <th scope="col">Day/Time Slot</th>
