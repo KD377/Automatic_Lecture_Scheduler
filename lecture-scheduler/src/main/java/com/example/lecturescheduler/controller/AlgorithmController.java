@@ -2,19 +2,14 @@ package com.example.lecturescheduler.controller;
 
 import com.example.lecturescheduler.dto.LectureSessionResponse;
 import com.example.lecturescheduler.model.LectureSession;
-import com.example.lecturescheduler.model.SingleGroup;
+import com.example.lecturescheduler.service.LectureSessionService;
 import com.example.lecturescheduler.service.SingleGroupService;
 import com.example.lecturescheduler.service.algorithm.Chromosome;
 import com.example.lecturescheduler.service.algorithm.GeneticAlgorithm;
-import com.example.lecturescheduler.service.algorithm.PopulationGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.DayOfWeek;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,9 +24,14 @@ public class AlgorithmController {
     private final GeneticAlgorithm geneticAlgorithm;
 
     @Autowired
-    public AlgorithmController(SingleGroupService singleGroupService,GeneticAlgorithm geneticAlgorithm){
+    private LectureSessionService lectureSessionService;
+
+
+    @Autowired
+    public AlgorithmController(SingleGroupService singleGroupService,GeneticAlgorithm geneticAlgorithm, LectureSessionService lectureSessionService){
         this.singleGroupService = singleGroupService;
         this.geneticAlgorithm = geneticAlgorithm;
+        this.lectureSessionService = lectureSessionService;
     }
 
     @GetMapping("/trigger-genetic-algorithm")
@@ -44,7 +44,30 @@ public class AlgorithmController {
                         session.getSubject().getName(),
                         session.getGroup().getName(),
                         session.getInstructor().getName(),
-                        session.getInstructor().getEmail(),
+                        session.getClassroom().getName(),
+                        session.getNumberOfTimeSlot(),
+                        session.getDay()
+                ))
+                .collect(Collectors.groupingBy(LectureSessionResponse::getGroupName));
+
+        lectureSessionService.deleteAllLectureSessions();
+
+        timetable.forEach(lectureSession -> {
+            lectureSessionService.saveLectureSession(lectureSession);
+        });
+
+
+        return ResponseEntity.ok(groupedResponse);
+    }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Map<String, List<LectureSessionResponse>>> findByEmail(@PathVariable String email){
+        List<LectureSession> lectureSessions = lectureSessionService.findByEmail(email);
+        Map<String, List<LectureSessionResponse>> groupedResponse = lectureSessions.stream()
+                .map(session -> new LectureSessionResponse(
+                        session.getSubject().getName(),
+                        session.getGroup().getName(),
+                        session.getInstructor().getName(),
                         session.getClassroom().getName(),
                         session.getNumberOfTimeSlot(),
                         session.getDay()
@@ -53,5 +76,7 @@ public class AlgorithmController {
 
         return ResponseEntity.ok(groupedResponse);
     }
+
+
 
 }
