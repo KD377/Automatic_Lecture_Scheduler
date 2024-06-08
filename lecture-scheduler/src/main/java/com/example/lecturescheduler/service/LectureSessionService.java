@@ -50,4 +50,11 @@ public class LectureSessionService {
                 .orElseThrow(() -> new ResourceNotFoundException("LectureSession not found for this id :: " + id));
         lectureSessionRepository.delete(lectureSession);
     }
+
+    public void deleteAllLectureSessions() {
+        lectureSessionRepository.deleteAll();
+    }
+    public List<LectureSession> findByEmail(String email){
+        return lectureSessionRepository.findLectureSessionsByInstructorEmail(email);
+    }
 }
