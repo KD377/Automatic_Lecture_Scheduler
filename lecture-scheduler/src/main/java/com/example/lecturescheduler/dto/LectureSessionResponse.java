@@ -15,6 +15,7 @@ public class LectureSessionResponse {
     String subjectName;
     String groupName;
     String lecturer;
+    String lecturerEmail;
     String classroom;
     int numberOfTimeSlot;
     DayOfWeek dayOfWeek;

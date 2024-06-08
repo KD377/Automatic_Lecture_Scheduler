@@ -26,6 +26,7 @@ public class Instructor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String email;
     private String department;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -37,8 +38,9 @@ public class Instructor {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<SingleGroup> groups;
 
-    public Instructor(String name, String department, List<Subject> subjectsTaught, List<Boolean> preferences, List<SingleGroup> groups) {
+    public Instructor(String name, String email, String department, List<Subject> subjectsTaught, List<Boolean> preferences, List<SingleGroup> groups) {
         this.name = name;
+        this.email = email;
         this.department = department;
         this.subjectsTaught = subjectsTaught;
         this.preferences = preferences;

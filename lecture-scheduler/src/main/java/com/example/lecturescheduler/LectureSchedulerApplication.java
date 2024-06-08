@@ -58,10 +58,10 @@ public class LectureSchedulerApplication {
 
 
 			// Create instructors and single groups
-			Instructor instructor1 = new Instructor("James Blunt","IT",List.of(subject1,subject2),List.of(true,true,false,false,false),List.of());
-			Instructor instructor2 = new Instructor("Adam","IT",List.of(subject2,subject3),List.of(true,false,true,false,true),List.of());
-			Instructor instructor3 = new Instructor("Jakob","IT",List.of(subject1,subject3),List.of(true,true,true,true,true),List.of());
-			Instructor instructor4 = new Instructor("Julian","IT",List.of(subject4,subject5),List.of(false,true,true,true,false),List.of());
+			Instructor instructor1 = new Instructor("James Blunt", "kolejniczak2002@gmail.com", "IT",List.of(subject1,subject2),List.of(true,true,false,false,false),List.of());
+			Instructor instructor2 = new Instructor("Adam", "adam@gmail.com","IT",List.of(subject2,subject3),List.of(true,false,true,false,true),List.of());
+			Instructor instructor3 = new Instructor("Jakob","jakub242484@gmail.com", "IT",List.of(subject1,subject3),List.of(true,true,true,true,true),List.of());
+			Instructor instructor4 = new Instructor("Julian","julian@gmail.com", "IT",List.of(subject4,subject5),List.of(false,true,true,true,false),List.of());
 
 			SingleGroup singleGroup1 = new SingleGroup("Grupa 1","IT",15,null);
 			SingleGroup singleGroup2 = new SingleGroup("Grupa 2","IT",15,null);

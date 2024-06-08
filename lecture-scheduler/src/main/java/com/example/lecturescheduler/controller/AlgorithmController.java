@@ -44,6 +44,7 @@ public class AlgorithmController {
                         session.getSubject().getName(),
                         session.getGroup().getName(),
                         session.getInstructor().getName(),
+                        session.getInstructor().getEmail(),
                         session.getClassroom().getName(),
                         session.getNumberOfTimeSlot(),
                         session.getDay()
