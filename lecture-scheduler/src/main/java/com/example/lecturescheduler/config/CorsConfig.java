@@ -13,10 +13,10 @@ public class CorsConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/*")
-                        .allowedOrigins("http://lecture-scheduler.s3-website-eu-west-1.amazonaws.com/")
+                registry.addMapping("/**")
+                        .allowedOrigins("http://lecture-scheduler.s3-website-eu-west-1.amazonaws.com")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("")
+                        .allowedHeaders("*")
                         .allowCredentials(true);
             }
         };
