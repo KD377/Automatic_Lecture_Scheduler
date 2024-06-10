@@ -2,10 +2,12 @@ package com.example.lecturescheduler.service;
 
 import com.example.lecturescheduler.exception.ResourceNotFoundException;
 import com.example.lecturescheduler.model.LectureSession;
+import com.example.lecturescheduler.model.TimeSlot;
 import com.example.lecturescheduler.repository.LectureSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +22,10 @@ public class LectureSessionService {
     }
 
     public LectureSession saveLectureSession(LectureSession lectureSession) {
+        TimeSlot timeSlot = new TimeSlot();
+        timeSlot.setStartTime(LocalTime.of(7, 45).plusMinutes((lectureSession.getNumberOfTimeSlot() - 1) * 90L));
+        timeSlot.setEndTime(timeSlot.getStartTime().plusMinutes(90));
+        lectureSession.setTimeSlot(timeSlot);
         return lectureSessionRepository.save(lectureSession);
     }
 
