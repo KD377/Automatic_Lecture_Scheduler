@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../axiosConfig.js';
 
 const GroupComponent = () => {
     const [name, setName] = useState('');
@@ -14,7 +14,7 @@ const GroupComponent = () => {
     }, []);
 
     const fetchGroups = () => {
-        axios.get('/api/groups')
+        api.get('/api/groups')
             .then(response => setGroups(response.data))
             .catch(error => console.error('Error fetching groups:', error));
     };
@@ -24,7 +24,7 @@ const GroupComponent = () => {
         const groupData = { name, programOfStudy, numberOfStudents };
 
         if (editMode) {
-            axios.put(`/api/groups/${editGroupId}`, groupData)
+            api.put(`/api/groups/${editGroupId}`, groupData)
                 .then(response => {
                     console.log('Group updated:', response.data);
                     setEditMode(false);
@@ -33,7 +33,7 @@ const GroupComponent = () => {
                 })
                 .catch(error => console.error('Error updating group:', error));
         } else {
-            axios.post('/api/groups', groupData)
+            api.post('/api/groups', groupData)
                 .then(response => {
                     console.log('Group added:', response.data);
                     fetchGroups();
@@ -55,7 +55,7 @@ const GroupComponent = () => {
     };
 
     const handleDeleteGroup = (id) => {
-        axios.delete(`/api/groups/${id}`)
+        api.delete(`/api/groups/${id}`)
             .then(response => {
                 console.log('Group deleted:', response.data);
                 fetchGroups();

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../axiosConfig.js';
 
 const ClassroomComponent = () => {
     const [name, setName] = useState('');
@@ -11,13 +11,13 @@ const ClassroomComponent = () => {
 
     useEffect(() => {
         fetchClassrooms();
-        axios.get('/api/subjects')
+        api.get('/api/subjects')
             .then(response => setAvailableSubjects(response.data))
             .catch(error => console.error('Error fetching subjects:', error));
     }, []);
 
     const fetchClassrooms = () => {
-        axios.get('/api/classrooms')
+        api.get('/api/classrooms')
             .then(response => setClassrooms(response.data))
             .catch(error => console.error('Error fetching classrooms:', error));
     };
@@ -26,7 +26,7 @@ const ClassroomComponent = () => {
         e.preventDefault();
         const classroomData = { name, subjects: selectedSubjects };
         if (editMode) {
-            axios.put(`/api/classrooms/${editClassroomId}`, classroomData)
+            api.put(`/api/classrooms/${editClassroomId}`, classroomData)
                 .then(response => {
                     console.log('Classroom updated:', response.data);
                     setEditMode(false);
@@ -35,7 +35,7 @@ const ClassroomComponent = () => {
                 })
                 .catch(error => console.error('Error updating classroom:', error));
         } else {
-            axios.post('/api/classrooms', classroomData)
+            api.post('/api/classrooms', classroomData)
                 .then(response => {
                     console.log('Classroom added:', response.data);
                     fetchClassrooms();
@@ -64,7 +64,7 @@ const ClassroomComponent = () => {
     };
 
     const handleDeleteClassroom = (id) => {
-        axios.delete(`/api/classrooms/${id}`)
+        api.delete(`/api/classrooms/${id}`)
             .then(response => {
                 console.log('Classroom deleted:', response.data);
                 fetchClassrooms();
