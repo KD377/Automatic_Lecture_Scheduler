@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/algorithm")
 public class AlgorithmController {
-
-
     private final SingleGroupService singleGroupService;
 
     private final GeneticAlgorithm geneticAlgorithm;
@@ -59,24 +57,4 @@ public class AlgorithmController {
 
         return ResponseEntity.ok(groupedResponse);
     }
-
-    @GetMapping("/email/{email}")
-    public ResponseEntity<Map<String, List<LectureSessionResponse>>> findByEmail(@PathVariable String email){
-        List<LectureSession> lectureSessions = lectureSessionService.findByEmail(email);
-        Map<String, List<LectureSessionResponse>> groupedResponse = lectureSessions.stream()
-                .map(session -> new LectureSessionResponse(
-                        session.getSubject().getName(),
-                        session.getGroup().getName(),
-                        session.getInstructor().getName(),
-                        session.getClassroom().getName(),
-                        session.getNumberOfTimeSlot(),
-                        session.getDay()
-                ))
-                .collect(Collectors.groupingBy(LectureSessionResponse::getGroupName));
-
-        return ResponseEntity.ok(groupedResponse);
-    }
-
-
-
 }
