@@ -11,7 +11,6 @@ import './css/LectureScheduler.css';
 function App() {
 
 
-
     return (
         <Router>
             <div className="App container">
@@ -30,7 +29,7 @@ const Home = () => {
     const [selectedComponent, setSelectedComponent] = useState(null);
     const navigate = useNavigate();
     const addToCalendar = async () => {
-        const SERVER_URL = 'http://localhost:8080';
+        const SERVER_URL = "https://ec2-3-255-158-231.eu-west-1.compute.amazonaws.com";
         console.log(SERVER_URL)
         const response = await fetch(
             SERVER_URL + '/google/add',
@@ -46,10 +45,10 @@ const Home = () => {
     };
 
     const getLogin = async () => {
-        const SERVER_URL = 'http://localhost:8080';
+        const SERVER_URL = "https://ec2-3-255-158-231.eu-west-1.compute.amazonaws.com";
         console.log(SERVER_URL)
         const response = await fetch(
-            SERVER_URL + '/windows/secured2',
+            SERVER_URL + '/windows/secured',
             { method: 'GET', redirect: "follow", credentials: 'include'}
         ).then((response) => response);
 
@@ -63,7 +62,7 @@ const Home = () => {
 
 
     const getLogout = async () => {
-        const SERVER_URL = 'http://localhost:8080';
+        const SERVER_URL = "https://ec2-3-255-158-231.eu-west-1.compute.amazonaws.com";
         console.log(SERVER_URL)
         const response = await fetch(
             SERVER_URL + '/windows/logout',
