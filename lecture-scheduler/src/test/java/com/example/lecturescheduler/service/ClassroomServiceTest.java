@@ -35,11 +35,11 @@ class ClassroomServiceTest {
     public void setup() {
         classroom1 = new Classroom();
         classroom1.setId(1L);
-        classroom1.setName("Room 101");
+        classroom1.setName("Classroom  101");
 
         classroom2 = new Classroom();
         classroom2.setId(2L);
-        classroom2.setName("Room 102");
+        classroom2.setName("Classroom  102");
 
         subject = new Subject();
         subject.setId(1L);
@@ -53,7 +53,7 @@ class ClassroomServiceTest {
         Classroom savedClassroom = classroomService.saveClassroom(classroom1);
 
         assertNotNull(savedClassroom);
-        assertEquals("Room 101", savedClassroom.getName());
+        assertEquals("Classroom  101", savedClassroom.getName());
         verify(classroomRepository, times(1)).save(classroom1);
     }
 
@@ -86,7 +86,7 @@ class ClassroomServiceTest {
         Optional<Classroom> foundClassroom = classroomService.findClassroomById(1L);
 
         assertTrue(foundClassroom.isPresent());
-        assertEquals("Room 101", foundClassroom.get().getName());
+        assertEquals("Classroom  101", foundClassroom.get().getName());
         verify(classroomRepository, times(1)).findById(1L);
     }
 
@@ -105,11 +105,11 @@ class ClassroomServiceTest {
         when(classroomRepository.findById(1L)).thenReturn(Optional.of(classroom1));
         when(classroomRepository.save(classroom1)).thenReturn(classroom1);
 
-        classroom1.setName("Updated Room 101");
+        classroom1.setName("Updated Classroom 101");
         Classroom updatedClassroom = classroomService.updateClassroom(1L, classroom1);
 
         assertNotNull(updatedClassroom);
-        assertEquals("Updated Room 101", updatedClassroom.getName());
+        assertEquals("Updated Classroom 101", updatedClassroom.getName());
         verify(classroomRepository, times(1)).findById(1L);
         verify(classroomRepository, times(1)).save(classroom1);
     }

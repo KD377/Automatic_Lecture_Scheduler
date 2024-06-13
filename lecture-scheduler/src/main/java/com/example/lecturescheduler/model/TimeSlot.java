@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.time.LocalTime;
 
 @NoArgsConstructor
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor
 @Setter
 @Getter
 @Builder
@@ -16,5 +16,4 @@ import java.time.LocalTime;
 public class TimeSlot implements Serializable {
     private LocalTime startTime;
     private LocalTime endTime;
-
 }

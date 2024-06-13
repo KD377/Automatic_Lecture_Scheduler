@@ -4,7 +4,6 @@ import com.example.lecturescheduler.exception.ResourceNotFoundException;
 import com.example.lecturescheduler.model.Instructor;
 import com.example.lecturescheduler.model.SingleGroup;
 import com.example.lecturescheduler.repository.GroupRepository;
-import com.example.lecturescheduler.repository.InstructorRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,8 +25,6 @@ public class SingleGroupServiceTest {
     @Mock
     private GroupRepository groupRepository;
 
-    @Mock
-    private InstructorRepository instructorRepository;
 
     @InjectMocks
     private SingleGroupService singleGroupService;
