@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../axiosConfig.js';
 
 const InstructorComponent = () => {
     const [name, setName] = useState('');
@@ -17,13 +17,13 @@ const InstructorComponent = () => {
     }, []);
 
     const fetchSubjects = () => {
-        axios.get('/api/subjects')
+        api.get('/api/subjects')
             .then(response => setAvailableSubjects(response.data))
             .catch(error => console.error('Error fetching subjects:', error));
     };
 
     const fetchInstructors = () => {
-        axios.get('/api/instructors')
+        api.get('/api/instructors')
             .then(response => setInstructors(response.data))
             .catch(error => console.error('Error fetching instructors:', error));
     };
@@ -35,7 +35,7 @@ const InstructorComponent = () => {
         const instructorData = { name, department, subjectsTaught: selectedSubjects, preferences };
 
         if (editMode) {
-            axios.put(`/api/instructors/${editInstructorId}`, instructorData)
+            api.put(`/api/instructors/${editInstructorId}`, instructorData)
                 .then(response => {
                     console.log('Instructor updated:', response.data);
                     setEditMode(false);
@@ -44,7 +44,7 @@ const InstructorComponent = () => {
                 })
                 .catch(error => console.error('Error updating instructor:', error));
         } else {
-            axios.post('/api/instructors', instructorData)
+            api.post('/api/instructors', instructorData)
                 .then(response => {
                     console.log('Instructor added:', response.data);
                     fetchInstructors();
@@ -75,7 +75,7 @@ const InstructorComponent = () => {
     };
 
     const handleDeleteInstructor = (id) => {
-        axios.delete(`/api/instructors/${id}`)
+        api.delete(`/api/instructors/${id}`)
             .then(response => {
                 console.log('Instructor deleted:', response.data);
                 fetchInstructors();

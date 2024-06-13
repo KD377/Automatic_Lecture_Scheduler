@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../axiosConfig.js';
 
 const SubjectComponent = () => {
     const [name, setName] = useState('');
@@ -14,7 +14,7 @@ const SubjectComponent = () => {
     }, []);
 
     const fetchSubjects = () => {
-        axios.get('/api/subjects')
+        api.get('/api/subjects')
             .then(response => setSubjects(response.data))
             .catch(error => console.error('Error fetching subjects:', error));
     };
@@ -23,7 +23,7 @@ const SubjectComponent = () => {
         e.preventDefault();
         const subjectData = { name, courseLevel, courseLength };
         if (editMode) {
-            axios.put(`/api/subjects/${editSubjectId}`, subjectData)
+            api.put(`/api/subjects/${editSubjectId}`, subjectData)
                 .then(response => {
                     console.log('Subject updated:', response.data);
                     setEditMode(false);
@@ -32,7 +32,7 @@ const SubjectComponent = () => {
                 })
                 .catch(error => console.error('Error updating subject:', error));
         } else {
-            axios.post('/api/subjects', subjectData)
+            api.post('/api/subjects', subjectData)
                 .then(response => {
                     console.log('Subject added:', response.data);
                     fetchSubjects();
@@ -45,7 +45,7 @@ const SubjectComponent = () => {
     };
 
     const handleDeleteSubject = (id) => {
-        axios.delete(`/api/subjects/${id}`)
+        api.delete(`/api/subjects/${id}`)
             .then(response => {
                 console.log('Subject deleted:', response.data);
                 fetchSubjects(); // Refresh the list of subjects

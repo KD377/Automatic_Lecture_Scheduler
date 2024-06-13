@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../axiosConfig.js';
 import * as XLSX from 'xlsx';
 import '../css/LectureScheduler.css';
 
@@ -12,7 +12,7 @@ const LectureSchedulerComponent = () => {
 
     const fetchSchedules = () => {
         setLoading(true);
-        axios.get('/api/algorithm/trigger-genetic-algorithm')
+        api.get('/api/algorithm/trigger-genetic-algorithm')
             .then(response => {
                 setSchedules(response.data);
                 setLoading(false);
