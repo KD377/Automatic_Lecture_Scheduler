@@ -35,14 +35,15 @@ const Home = () => {
         const response = await fetch(
             SERVER_URL + '/google/add',
             { method: 'POST', redirect: "follow", credentials: 'include'}
-        ).then((response) => response);
+        ).then((response) => response).catch((error) => console.log(error));
 
-        console.log(response);
-        if(response.redirected) {
-            document.location = response.url;
+        try {
+            if (response.redirected) {
+                document.location = response.url;
+            }
+        }catch (e) {
+            console.log(e);
         }
-        const data = await response.json();
-        console.log(data);
     };
 
     const getLogin = async () => {
@@ -51,14 +52,15 @@ const Home = () => {
         const response = await fetch(
             SERVER_URL + '/windows/secured2',
             { method: 'GET', redirect: "follow", credentials: 'include'}
-        ).then((response) => response);
+        ).then((response) => response).catch((error) => console.log(error));
 
-        console.log(response);
-        if(response.redirected) {
-            document.location = response.url;
+        try {
+            if (response.redirected) {
+                document.location = response.url;
+            }
+        }catch (e) {
+            console.log(e);
         }
-        const data = await response.json();
-        console.log(data);
     };
 
 
@@ -68,14 +70,15 @@ const Home = () => {
         const response = await fetch(
             SERVER_URL + '/windows/logout',
             { method: 'GET', redirect: "follow", credentials: 'include'}
-        ).then((response) => response);
+        ).then((response) => response).catch((error) => console.log(error));
 
-        console.log(response);
-        if(response.redirected) {
-            document.location = response.url;
+        try {
+            if (response.redirected) {
+                document.location = response.url;
+            }
+        }catch (e) {
+            console.log(e);
         }
-        const data = await response.json();
-        console.log(data);
     };
 
 
