@@ -2,19 +2,14 @@ package com.example.lecturescheduler.controller;
 
 import com.example.lecturescheduler.dto.LectureSessionResponse;
 import com.example.lecturescheduler.model.LectureSession;
-import com.example.lecturescheduler.model.SingleGroup;
+import com.example.lecturescheduler.service.LectureSessionService;
 import com.example.lecturescheduler.service.SingleGroupService;
 import com.example.lecturescheduler.service.algorithm.Chromosome;
 import com.example.lecturescheduler.service.algorithm.GeneticAlgorithm;
-import com.example.lecturescheduler.service.algorithm.PopulationGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.time.DayOfWeek;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,16 +17,19 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/algorithm")
 public class AlgorithmController {
-
-
     private final SingleGroupService singleGroupService;
 
     private final GeneticAlgorithm geneticAlgorithm;
 
     @Autowired
-    public AlgorithmController(SingleGroupService singleGroupService,GeneticAlgorithm geneticAlgorithm){
+    private LectureSessionService lectureSessionService;
+
+
+    @Autowired
+    public AlgorithmController(SingleGroupService singleGroupService,GeneticAlgorithm geneticAlgorithm, LectureSessionService lectureSessionService){
         this.singleGroupService = singleGroupService;
         this.geneticAlgorithm = geneticAlgorithm;
+        this.lectureSessionService = lectureSessionService;
     }
 
     @GetMapping("/trigger-genetic-algorithm")
@@ -50,7 +48,13 @@ public class AlgorithmController {
                 ))
                 .collect(Collectors.groupingBy(LectureSessionResponse::getGroupName));
 
+        lectureSessionService.deleteAllLectureSessions();
+
+        timetable.forEach(lectureSession -> {
+            lectureSessionService.saveLectureSession(lectureSession);
+        });
+
+
         return ResponseEntity.ok(groupedResponse);
     }
-
 }

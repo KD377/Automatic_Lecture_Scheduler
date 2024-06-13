@@ -17,11 +17,7 @@ public class AuthService {
         return ResponseEntity.ok("Hello, welcome to the home page!");
     }
 
-    public ResponseEntity<String> secured() {
-        return ResponseEntity.ok("Hello, welcome to the secured page!");
-    }
-
-    public ResponseEntity<String> secured2(OAuth2User principal) {
+    public ResponseEntity<String> secured(OAuth2User principal) {
         return ResponseEntity.ok("Hello, " + principal.getAttribute("email") + "!");
     }
 

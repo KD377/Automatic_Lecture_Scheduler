@@ -25,17 +25,13 @@ public class AuthController {
     }
 
     @GetMapping("/secured")
-    public ResponseEntity<String> secured() {
-        return authService.secured();
-    }
-
-    @GetMapping("/secured2")
-    public ResponseEntity<String> secured2(@AuthenticationPrincipal OAuth2User principal) {
-        return authService.secured2(principal);
+    public ResponseEntity<String> secured(@AuthenticationPrincipal OAuth2User principal) {
+        return authService.secured(principal);
     }
 
     @GetMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request, HttpServletResponse response) {
         return authService.logout(request, response);
     }
+
 }

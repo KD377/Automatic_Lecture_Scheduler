@@ -47,6 +47,7 @@ public class InstructorService {
         Instructor instructor = instructorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Instructor not found for this id :: " + id));
         instructor.setName(instructorDetails.getName());
+        instructor.setEmail(instructorDetails.getEmail());
         instructor.setDepartment(instructorDetails.getDepartment());
         instructor.setSubjectsTaught(instructorDetails.getSubjectsTaught());
         instructor.setPreferences(instructorDetails.getPreferences());

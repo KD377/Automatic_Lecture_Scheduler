@@ -3,6 +3,7 @@ package com.example.lecturescheduler.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.DayOfWeek;
 
 @NoArgsConstructor
@@ -11,7 +12,7 @@ import java.time.DayOfWeek;
 @Getter
 @Builder
 @Entity
-public class LectureSession {
+public class LectureSession{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
