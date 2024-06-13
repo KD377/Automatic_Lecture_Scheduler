@@ -50,7 +50,7 @@ const Home = () => {
         const SERVER_URL = 'http://localhost:8080';
         console.log(SERVER_URL)
         const response = await fetch(
-            SERVER_URL + '/windows/secured2',
+            SERVER_URL + '/windows/secured',
             { method: 'GET', redirect: "follow", credentials: 'include'}
         ).then((response) => response).catch((error) => console.log(error));
 
