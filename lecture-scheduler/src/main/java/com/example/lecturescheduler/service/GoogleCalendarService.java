@@ -1,6 +1,5 @@
 package com.example.lecturescheduler.service;
 
-import com.example.lecturescheduler.dto.LectureSessionResponse;
 import com.example.lecturescheduler.model.LectureSession;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
@@ -18,8 +17,6 @@ import java.security.GeneralSecurityException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class GoogleCalendarService {

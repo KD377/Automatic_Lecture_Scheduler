@@ -1,7 +1,6 @@
 package com.example.lecturescheduler.repository;
 
 import com.example.lecturescheduler.model.Classroom;
-import com.example.lecturescheduler.model.Instructor;
 import com.example.lecturescheduler.model.Subject;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

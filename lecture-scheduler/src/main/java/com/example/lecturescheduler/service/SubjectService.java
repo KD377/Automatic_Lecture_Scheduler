@@ -19,6 +19,7 @@ public class SubjectService {
 
     private final SubjectRepository subjectRepository;
     private final ClassroomRepository classroomRepository;
+    private static final String SUBJECT_NOT_FOUND = "Subject not found for this id :: ";
 
     @Autowired
     public SubjectService(SubjectRepository subjectRepository, ClassroomRepository classroomRepository) {
@@ -65,7 +66,7 @@ public class SubjectService {
 
     public Subject updateSubject(Long id, Subject subjectDetails) {
         Subject subject = subjectRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Subject not found for this id :: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(SUBJECT_NOT_FOUND + id));
         subject.setName(subjectDetails.getName());
         subject.setCourseLevel(subjectDetails.getCourseLevel());
         subject.setCourseLength(subjectDetails.getCourseLength());
@@ -74,7 +75,7 @@ public class SubjectService {
 
     public Subject addClassroomToSubject(Long subjectId, Long classroomId) {
         Subject subject = subjectRepository.findById(subjectId)
-                .orElseThrow(() -> new ResourceNotFoundException("Subject not found for this id :: " + subjectId));
+                .orElseThrow(() -> new ResourceNotFoundException(SUBJECT_NOT_FOUND + subjectId));
         Classroom classroom = classroomRepository.findById(classroomId)
                 .orElseThrow(() -> new ResourceNotFoundException("Classroom not found for this id :: " + classroomId));
         subject.getClassrooms().add(classroom);
@@ -83,14 +84,14 @@ public class SubjectService {
 
     public Subject removeClassroomFromSubject(Long subjectId, Long classroomId) {
         Subject subject = subjectRepository.findById(subjectId)
-                .orElseThrow(() -> new ResourceNotFoundException("Subject not found for this id :: " + subjectId));
+                .orElseThrow(() -> new ResourceNotFoundException(SUBJECT_NOT_FOUND + subjectId));
         subject.getClassrooms().removeIf(classroom -> classroom.getId().equals(classroomId));
         return subjectRepository.save(subject);
     }
 
     public void deleteSubject(Long id) {
         Subject subject = subjectRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Subject not found for this id :: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(SUBJECT_NOT_FOUND + id));
         subjectRepository.delete(subject);
     }
 }

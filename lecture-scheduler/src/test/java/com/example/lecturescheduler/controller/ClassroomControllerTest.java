@@ -21,7 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-public class ClassroomControllerTest {
+class ClassroomControllerTest {
 
     @InjectMocks
     private ClassroomController classroomController;
@@ -35,7 +35,7 @@ public class ClassroomControllerTest {
     }
 
     @Test
-    public void testGetAllClassrooms() {
+    void testGetAllClassrooms() {
         Classroom classroom1 = new Classroom();
         classroom1.setId(1L);
         classroom1.setName("Classroom 1");
@@ -53,7 +53,7 @@ public class ClassroomControllerTest {
     }
 
     @Test
-    public void testGetClassroomById() {
+    void testGetClassroomById() {
         Classroom classroom = new Classroom();
         classroom.setId(1L);
         classroom.setName("Classroom 1");
@@ -67,7 +67,7 @@ public class ClassroomControllerTest {
     }
 
     @Test
-    public void testGetClassroomByIdNotFound() {
+    void testGetClassroomByIdNotFound() {
         when(classroomService.findClassroomById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> {
@@ -78,7 +78,7 @@ public class ClassroomControllerTest {
     }
 
     @Test
-    public void testCreateClassroom() {
+    void testCreateClassroom() {
         Classroom classroom = new Classroom();
         classroom.setName("New Classroom");
 
@@ -91,7 +91,7 @@ public class ClassroomControllerTest {
     }
 
     @Test
-    public void testUpdateClassroom() {
+    void testUpdateClassroom() {
         Classroom classroom = new Classroom();
         classroom.setId(1L);
         classroom.setName("Updated Classroom");
@@ -105,7 +105,7 @@ public class ClassroomControllerTest {
     }
 
     @Test
-    public void testDeleteClassroom() {
+    void testDeleteClassroom() {
         doNothing().when(classroomService).deleteClassroom(1L);
 
         ResponseEntity<?> response = classroomController.deleteClassroom(1L);

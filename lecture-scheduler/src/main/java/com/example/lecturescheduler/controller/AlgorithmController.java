@@ -3,7 +3,6 @@ package com.example.lecturescheduler.controller;
 import com.example.lecturescheduler.dto.LectureSessionResponse;
 import com.example.lecturescheduler.model.LectureSession;
 import com.example.lecturescheduler.service.LectureSessionService;
-import com.example.lecturescheduler.service.SingleGroupService;
 import com.example.lecturescheduler.service.algorithm.Chromosome;
 import com.example.lecturescheduler.service.algorithm.GeneticAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/algorithm")
 public class AlgorithmController {
-    private final SingleGroupService singleGroupService;
 
     private final GeneticAlgorithm geneticAlgorithm;
 
@@ -26,8 +24,7 @@ public class AlgorithmController {
 
 
     @Autowired
-    public AlgorithmController(SingleGroupService singleGroupService,GeneticAlgorithm geneticAlgorithm, LectureSessionService lectureSessionService){
-        this.singleGroupService = singleGroupService;
+    public AlgorithmController(GeneticAlgorithm geneticAlgorithm, LectureSessionService lectureSessionService){
         this.geneticAlgorithm = geneticAlgorithm;
         this.lectureSessionService = lectureSessionService;
     }
@@ -50,9 +47,7 @@ public class AlgorithmController {
 
         lectureSessionService.deleteAllLectureSessions();
 
-        timetable.forEach(lectureSession -> {
-            lectureSessionService.saveLectureSession(lectureSession);
-        });
+        timetable.forEach(lectureSession -> lectureSessionService.saveLectureSession(lectureSession));
 
 
         return ResponseEntity.ok(groupedResponse);

@@ -19,6 +19,7 @@ public class InstructorService {
     private final InstructorRepository instructorRepository;
     private final SubjectRepository subjectRepository;
     private final GroupRepository groupRepository;
+    private static final String INSTRUCTOR_NOT_FOUND = "Instructor not found for this id :: ";
 
     @Autowired
     public InstructorService(InstructorRepository instructorRepository, SubjectRepository subjectRepository, GroupRepository groupRepository) {
@@ -45,7 +46,7 @@ public class InstructorService {
 
     public Instructor updateInstructor(Long id, Instructor instructorDetails) {
         Instructor instructor = instructorRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Instructor not found for this id :: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(INSTRUCTOR_NOT_FOUND + id));
         instructor.setName(instructorDetails.getName());
         instructor.setEmail(instructorDetails.getEmail());
         instructor.setDepartment(instructorDetails.getDepartment());
@@ -56,13 +57,13 @@ public class InstructorService {
 
     public void deleteInstructor(Long id) {
         Instructor instructor = instructorRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Instructor not found for this id :: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException(INSTRUCTOR_NOT_FOUND + id));
         instructorRepository.delete(instructor);
     }
 
     public Instructor addSubjectTaught(Long instructorId, Long subjectId) {
         Instructor instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Instructor not found for this id :: " + instructorId));
+                .orElseThrow(() -> new ResourceNotFoundException(INSTRUCTOR_NOT_FOUND + instructorId));
         Subject subject = subjectRepository.findById(subjectId)
                 .orElseThrow(() -> new ResourceNotFoundException("Subject not found for this id :: " + subjectId));
 
@@ -72,14 +73,14 @@ public class InstructorService {
 
     public Instructor removeSubjectTaught(Long instructorId, Long subjectId) {
         Instructor instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Instructor not found for this id :: " + instructorId));
+                .orElseThrow(() -> new ResourceNotFoundException(INSTRUCTOR_NOT_FOUND + instructorId));
         instructor.getSubjectsTaught().removeIf(subject -> subject.getId().equals(subjectId));
         return instructorRepository.save(instructor);
     }
 
     public Instructor addGroup(Long instructorId, Long groupId) {
         Instructor instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Instructor not found for this id :: " + instructorId));
+                .orElseThrow(() -> new ResourceNotFoundException(INSTRUCTOR_NOT_FOUND + instructorId));
         SingleGroup group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new ResourceNotFoundException("Group not found for this id :: " + groupId));
 
@@ -89,7 +90,7 @@ public class InstructorService {
 
     public Instructor removeGroup(Long instructorId, Long groupId) {
         Instructor instructor = instructorRepository.findById(instructorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Instructor not found for this id :: " + instructorId));
+                .orElseThrow(() -> new ResourceNotFoundException(INSTRUCTOR_NOT_FOUND + instructorId));
         instructor.getGroups().removeIf(group -> group.getId().equals(groupId));
         return instructorRepository.save(instructor);
     }

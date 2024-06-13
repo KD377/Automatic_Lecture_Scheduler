@@ -1,6 +1,5 @@
 package com.example.lecturescheduler.service.algorithm;
 
-import com.example.lecturescheduler.model.Instructor;
 import com.example.lecturescheduler.model.LectureSession;
 import com.example.lecturescheduler.model.SingleGroup;
 import org.springframework.beans.factory.annotation.Autowired;

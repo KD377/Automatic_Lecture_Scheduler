@@ -19,7 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-public class InstructorControllerTest {
+class InstructorControllerTest {
 
     @InjectMocks
     private InstructorController instructorController;
@@ -33,7 +33,7 @@ public class InstructorControllerTest {
     }
 
     @Test
-    public void testGetAllInstructors() {
+    void testGetAllInstructors() {
         Instructor instructor1 = new Instructor();
         instructor1.setId(1L);
         instructor1.setName("Instructor 1");
@@ -51,7 +51,7 @@ public class InstructorControllerTest {
     }
 
     @Test
-    public void testGetInstructorById() {
+    void testGetInstructorById() {
         Instructor instructor = new Instructor();
         instructor.setId(1L);
         instructor.setName("Instructor 1");
@@ -65,7 +65,7 @@ public class InstructorControllerTest {
     }
 
     @Test
-    public void testGetInstructorByIdNotFound() {
+    void testGetInstructorByIdNotFound() {
         when(instructorService.findInstructorById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> {
@@ -76,7 +76,7 @@ public class InstructorControllerTest {
     }
 
     @Test
-    public void testCreateInstructor() {
+    void testCreateInstructor() {
         Instructor instructor = new Instructor();
         instructor.setName("New Instructor");
 
@@ -89,7 +89,7 @@ public class InstructorControllerTest {
     }
 
     @Test
-    public void testUpdateInstructor() {
+    void testUpdateInstructor() {
         Instructor instructor = new Instructor();
         instructor.setId(1L);
         instructor.setName("Updated Instructor");
@@ -103,7 +103,7 @@ public class InstructorControllerTest {
     }
 
     @Test
-    public void testDeleteInstructor() {
+    void testDeleteInstructor() {
         doNothing().when(instructorService).deleteInstructor(1L);
 
         ResponseEntity<?> response = instructorController.deleteInstructor(1L);

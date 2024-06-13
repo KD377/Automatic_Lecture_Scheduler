@@ -4,7 +4,6 @@ import com.example.lecturescheduler.exception.ResourceNotFoundException;
 import com.example.lecturescheduler.model.Classroom;
 import com.example.lecturescheduler.model.Subject;
 import com.example.lecturescheduler.repository.ClassroomRepository;
-import com.example.lecturescheduler.service.ClassroomService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ClassroomServiceTest {
+class ClassroomServiceTest {
 
     @Mock
     private ClassroomRepository classroomRepository;
@@ -48,7 +47,7 @@ public class ClassroomServiceTest {
     }
 
     @Test
-    public void testSaveClassroom() {
+    void testSaveClassroom() {
         when(classroomRepository.save(classroom1)).thenReturn(classroom1);
 
         Classroom savedClassroom = classroomService.saveClassroom(classroom1);
@@ -59,7 +58,7 @@ public class ClassroomServiceTest {
     }
 
     @Test
-    public void testFindAllClassrooms() {
+    void testFindAllClassrooms() {
         when(classroomRepository.findAll()).thenReturn(Arrays.asList(classroom1, classroom2));
 
         List<Classroom> classrooms = classroomService.findAllClassrooms();
@@ -70,7 +69,7 @@ public class ClassroomServiceTest {
     }
 
     @Test
-    public void testFindBySubject() {
+    void testFindBySubject() {
         when(classroomRepository.findBySubject(subject)).thenReturn(Arrays.asList(classroom1));
 
         List<Classroom> classrooms = classroomService.findBySubject(subject);
@@ -81,7 +80,7 @@ public class ClassroomServiceTest {
     }
 
     @Test
-    public void testFindClassroomById() {
+    void testFindClassroomById() {
         when(classroomRepository.findById(1L)).thenReturn(Optional.of(classroom1));
 
         Optional<Classroom> foundClassroom = classroomService.findClassroomById(1L);
@@ -92,7 +91,7 @@ public class ClassroomServiceTest {
     }
 
     @Test
-    public void testFindClassroomById_NotFound() {
+    void testFindClassroomById_NotFound() {
         when(classroomRepository.findById(1L)).thenReturn(Optional.empty());
 
         Optional<Classroom> foundClassroom = classroomService.findClassroomById(1L);
@@ -102,7 +101,7 @@ public class ClassroomServiceTest {
     }
 
     @Test
-    public void testUpdateClassroom() {
+    void testUpdateClassroom() {
         when(classroomRepository.findById(1L)).thenReturn(Optional.of(classroom1));
         when(classroomRepository.save(classroom1)).thenReturn(classroom1);
 
@@ -116,7 +115,7 @@ public class ClassroomServiceTest {
     }
 
     @Test
-    public void testUpdateClassroom_NotFound() {
+    void testUpdateClassroom_NotFound() {
         when(classroomRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> {
@@ -126,7 +125,7 @@ public class ClassroomServiceTest {
     }
 
     @Test
-    public void testDeleteClassroom() {
+    void testDeleteClassroom() {
         when(classroomRepository.findById(1L)).thenReturn(Optional.of(classroom1));
         doNothing().when(classroomRepository).delete(classroom1);
 
@@ -137,7 +136,7 @@ public class ClassroomServiceTest {
     }
 
     @Test
-    public void testDeleteClassroom_NotFound() {
+    void testDeleteClassroom_NotFound() {
         when(classroomRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> {

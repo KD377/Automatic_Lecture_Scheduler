@@ -19,7 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-public class SubjectControllerTest {
+class SubjectControllerTest {
 
     @InjectMocks
     private SubjectController subjectController;
@@ -33,7 +33,7 @@ public class SubjectControllerTest {
     }
 
     @Test
-    public void testGetAllSubjects() {
+    void testGetAllSubjects() {
         Subject subject1 = new Subject();
         subject1.setId(1L);
         subject1.setName("Subject 1");
@@ -51,7 +51,7 @@ public class SubjectControllerTest {
     }
 
     @Test
-    public void testGetSubjectById() {
+    void testGetSubjectById() {
         Subject subject = new Subject();
         subject.setId(1L);
         subject.setName("Subject 1");
@@ -65,7 +65,7 @@ public class SubjectControllerTest {
     }
 
     @Test
-    public void testGetSubjectByIdNotFound() {
+    void testGetSubjectByIdNotFound() {
         when(subjectService.findSubjectById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> {
@@ -76,7 +76,7 @@ public class SubjectControllerTest {
     }
 
     @Test
-    public void testCreateSubject() {
+    void testCreateSubject() {
         Subject subject = new Subject();
         subject.setName("New Subject");
 
@@ -89,7 +89,7 @@ public class SubjectControllerTest {
     }
 
     @Test
-    public void testUpdateSubject() {
+    void testUpdateSubject() {
         Subject subject = new Subject();
         subject.setId(1L);
         subject.setName("Updated Subject");
@@ -103,7 +103,7 @@ public class SubjectControllerTest {
     }
 
     @Test
-    public void testDeleteSubject() {
+    void testDeleteSubject() {
         doNothing().when(subjectService).deleteSubject(1L);
 
         ResponseEntity<?> response = subjectController.deleteSubject(1L);

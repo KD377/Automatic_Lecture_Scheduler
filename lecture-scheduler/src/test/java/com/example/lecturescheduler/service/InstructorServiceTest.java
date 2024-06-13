@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class InstructorServiceTest {
+class InstructorServiceTest {
 
     @Mock
     private InstructorRepository instructorRepository;
@@ -61,7 +61,7 @@ public class InstructorServiceTest {
     }
 
     @Test
-    public void testSaveInstructor() {
+    void testSaveInstructor() {
         when(instructorRepository.save(instructor)).thenReturn(instructor);
 
         Instructor savedInstructor = instructorService.saveInstructor(instructor);
@@ -72,7 +72,7 @@ public class InstructorServiceTest {
     }
 
     @Test
-    public void testFindBySubject() {
+    void testFindBySubject() {
         when(instructorRepository.findBySubject(subject)).thenReturn(Arrays.asList(instructor));
 
         List<Instructor> instructors = instructorService.findBySubject(subject);
@@ -83,7 +83,7 @@ public class InstructorServiceTest {
     }
 
     @Test
-    public void testFindAllInstructors() {
+    void testFindAllInstructors() {
         when(instructorRepository.findAll()).thenReturn(Arrays.asList(instructor));
 
         List<Instructor> instructors = instructorService.findAllInstructors();
@@ -94,7 +94,7 @@ public class InstructorServiceTest {
     }
 
     @Test
-    public void testFindInstructorById() {
+    void testFindInstructorById() {
         when(instructorRepository.findById(1L)).thenReturn(Optional.of(instructor));
 
         Optional<Instructor> foundInstructor = instructorService.findInstructorById(1L);
@@ -105,7 +105,7 @@ public class InstructorServiceTest {
     }
 
     @Test
-    public void testFindInstructorById_NotFound() {
+    void testFindInstructorById_NotFound() {
         when(instructorRepository.findById(1L)).thenReturn(Optional.empty());
 
         Optional<Instructor> foundInstructor = instructorService.findInstructorById(1L);
@@ -115,7 +115,7 @@ public class InstructorServiceTest {
     }
 
     @Test
-    public void testUpdateInstructor() {
+    void testUpdateInstructor() {
         when(instructorRepository.findById(1L)).thenReturn(Optional.of(instructor));
         when(instructorRepository.save(instructor)).thenReturn(instructor);
 
@@ -129,7 +129,7 @@ public class InstructorServiceTest {
     }
 
     @Test
-    public void testUpdateInstructor_NotFound() {
+    void testUpdateInstructor_NotFound() {
         when(instructorRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> {
@@ -139,7 +139,7 @@ public class InstructorServiceTest {
     }
 
     @Test
-    public void testDeleteInstructor() {
+    void testDeleteInstructor() {
         when(instructorRepository.findById(1L)).thenReturn(Optional.of(instructor));
         doNothing().when(instructorRepository).delete(instructor);
 
@@ -150,7 +150,7 @@ public class InstructorServiceTest {
     }
 
     @Test
-    public void testDeleteInstructor_NotFound() {
+    void testDeleteInstructor_NotFound() {
         when(instructorRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> {

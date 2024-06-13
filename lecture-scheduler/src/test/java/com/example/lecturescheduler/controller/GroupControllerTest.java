@@ -19,7 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-public class GroupControllerTest {
+class GroupControllerTest {
 
     @InjectMocks
     private GroupController groupController;
@@ -33,7 +33,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void testGetAllGroups() {
+    void testGetAllGroups() {
         SingleGroup group1 = new SingleGroup();
         group1.setId(1L);
         group1.setName("Group 1");
@@ -51,7 +51,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void testGetGroupById() {
+    void testGetGroupById() {
         SingleGroup group = new SingleGroup();
         group.setId(1L);
         group.setName("Group 1");
@@ -65,7 +65,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void testGetGroupByIdNotFound() {
+    void testGetGroupByIdNotFound() {
         when(groupService.findGroupById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> {
@@ -76,7 +76,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void testCreateGroup() {
+    void testCreateGroup() {
         SingleGroup group = new SingleGroup();
         group.setName("New Group");
 
@@ -89,7 +89,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void testUpdateGroup() {
+    void testUpdateGroup() {
         SingleGroup group = new SingleGroup();
         group.setId(1L);
         group.setName("Updated Group");
@@ -103,7 +103,7 @@ public class GroupControllerTest {
     }
 
     @Test
-    public void testDeleteGroup() {
+    void testDeleteGroup() {
         doNothing().when(groupService).deleteGroup(1L);
 
         ResponseEntity<?> response = groupController.deleteGroup(1L);

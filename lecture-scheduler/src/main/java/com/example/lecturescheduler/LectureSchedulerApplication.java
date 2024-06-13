@@ -18,6 +18,8 @@ import java.util.List;
 @SpringBootApplication
 public class LectureSchedulerApplication {
 
+	private static final String INTERMEDIETE_LEVEL = "Intermediate";
+
 	public static void main(String[] args) {
 		SpringApplication.run(LectureSchedulerApplication.class, args);
 	}
@@ -32,11 +34,11 @@ public class LectureSchedulerApplication {
 			Classroom classroom4 = new Classroom("104");
 
 			// Create subjects
-			Subject subject1 = new Subject("Algorithms","Intermediate",15,null);
-			Subject subject2 = new Subject("Maths","Intermediate",15,null);
-			Subject subject3 = new Subject("Object programming","Intermediate",15,null);
-			Subject subject4 = new Subject("Ang","Intermediate",15,null);
-			Subject subject5 = new Subject("WF","Intermediate",15,null);
+			Subject subject1 = new Subject("Algorithms", INTERMEDIETE_LEVEL,15,null);
+			Subject subject2 = new Subject("Maths", INTERMEDIETE_LEVEL,15,null);
+			Subject subject3 = new Subject("Object programming", INTERMEDIETE_LEVEL,15,null);
+			Subject subject4 = new Subject("Ang", INTERMEDIETE_LEVEL,15,null);
+			Subject subject5 = new Subject("WF", INTERMEDIETE_LEVEL,15,null);
 
 			// Set relationships
 			classroom1.setSubjects(List.of(subject1, subject2, subject3,subject4,subject5));
