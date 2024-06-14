@@ -62,7 +62,7 @@ class ClassroomControllerIntegrationTest {
     void testGetClassroomByIdNotFound() throws Exception {
         mockMvc.perform(get("/api/classrooms/{id}", 999L))
                 .andExpect(status().isNotFound())
-                .andExpect(result -> assertThat(result.getResolvedException() instanceof ResourceNotFoundException).isTrue())
+                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(ResourceNotFoundException.class))
                 .andExpect(result -> assertThat(Objects.requireNonNull(result.getResolvedException()).getMessage()).isEqualTo("Classroom not found for this id :: 999"));
     }
 
