@@ -7,8 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ClassroomRepository extends JpaRepository<Classroom, Long> {
     @Query("SELECT c FROM Classroom c JOIN c.subjects s WHERE s = :subject")
     List<Classroom> findBySubject(@Param("subject") Subject subject);
+    Optional<Classroom> findByName(String name);
 }
