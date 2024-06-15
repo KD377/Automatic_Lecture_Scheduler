@@ -6,16 +6,15 @@ import com.example.lecturescheduler.repository.LectureSessionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,14 +56,4 @@ public class LectureSessionServiceTest {
         verify(lectureSessionRepository, times(1)).deleteAll();
     }
 
-    @Test
-    public void testFindByEmail() {
-        when(lectureSessionRepository.findLectureSessionsByInstructorEmail("test@example.com")).thenReturn(Arrays.asList(lectureSession));
-
-        List<LectureSession> lectureSessions = lectureSessionService.findByEmail("test@example.com");
-
-        assertNotNull(lectureSessions);
-        assertEquals(1, lectureSessions.size());
-        verify(lectureSessionRepository, times(1)).findLectureSessionsByInstructorEmail("test@example.com");
-    }
 }

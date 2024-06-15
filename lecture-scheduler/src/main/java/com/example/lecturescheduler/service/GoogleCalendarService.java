@@ -1,6 +1,7 @@
 package com.example.lecturescheduler.service;
 
 import com.example.lecturescheduler.model.LectureSession;
+import com.example.lecturescheduler.repository.LectureSessionRepository;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.util.DateTime;
@@ -22,22 +23,22 @@ import java.util.List;
 public class GoogleCalendarService {
 
     @Autowired
-    private LectureSessionService lectureSessionService;
+    private LectureSessionRepository lectureSessionRepository;
 
     @Autowired
-    public GoogleCalendarService(LectureSessionService lectureSessionService){
-        this.lectureSessionService = lectureSessionService;
+    public GoogleCalendarService(LectureSessionRepository lectureSessionRepository){
+        this.lectureSessionRepository = lectureSessionRepository;
     }
 
     public List<LectureSession> findByEmail(String email){
-        return lectureSessionService.findByEmail(email);
+        return lectureSessionRepository.findLectureSessionsByInstructorEmail(email);
     }
 
     public String getUserEmail(OAuth2User oauth2User){
         return oauth2User.getAttribute("email");
     }
 
-    private LocalDate getNextOccurrence(DayOfWeek dayOfWeek){
+    protected LocalDate getNextOccurrence(DayOfWeek dayOfWeek){
         LocalDate today = LocalDate.now();
         LocalDate nextOccurrence = today.with(dayOfWeek);
         if(nextOccurrence.isBefore(today) || nextOccurrence.isEqual(today)){
@@ -47,20 +48,21 @@ public class GoogleCalendarService {
         return nextOccurrence;
     }
 
-    private Calendar getCalendarService(OAuth2AccessToken accessToken) throws GeneralSecurityException, IOException {
+    protected Calendar getCalendarService(OAuth2AccessToken accessToken) throws GeneralSecurityException, IOException {
         return new Calendar.Builder(GoogleNetHttpTransport.newTrustedTransport(), JacksonFactory.getDefaultInstance(), null)
                 .setApplicationName("Lecture Scheduler")
                 .setHttpRequestInitializer(request -> request.getHeaders().setAuthorization("Bearer " + accessToken.getTokenValue()))
                 .build();
     }
 
-    private Event createCyclicalEvent(LectureSession session){
+    protected Event createCyclicalEvent(LectureSession session){
         LocalDate nextOccurrence = getNextOccurrence(session.getDay());
         LocalDateTime startDateTime = LocalDateTime.of(nextOccurrence, session.getTimeSlot().getStartTime().plusHours(1));
         LocalDateTime endDateTime = LocalDateTime.of(nextOccurrence, session.getTimeSlot().getEndTime().plusHours(1));
 
-        ZonedDateTime startZonedDateTime = startDateTime.atZone(ZoneId.systemDefault());
-        ZonedDateTime endZonedDateTime = endDateTime.atZone(ZoneId.systemDefault());
+        ZoneId zoneId = ZoneId.of("Europe/Warsaw");
+        ZonedDateTime startZonedDateTime = startDateTime.atZone(zoneId);
+        ZonedDateTime endZonedDateTime = endDateTime.atZone(zoneId);
 
         DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
@@ -95,8 +97,4 @@ public class GoogleCalendarService {
             service.events().insert("primary", event).execute();
         }
     }
-
-
-
-
 }
