@@ -1,6 +1,5 @@
 package com.example.lecturescheduler.controller;
 
-import com.example.lecturescheduler.dto.LectureSessionResponse;
 import com.example.lecturescheduler.service.GoogleCalendarService;
 import com.example.lecturescheduler.service.LectureSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,41 +9,26 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import com.google.api.services.calendar.model.Events;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.util.List;
-import java.util.Map;
 
 
 @RestController
 @RequestMapping("/google")
 public class GoogleCalendarController {
 
-    @Autowired
-    private GoogleCalendarService googleCalendarService;
+    private final GoogleCalendarService googleCalendarService;
 
-    @Autowired
     LectureSessionService lectureSessionService;
 
     @Autowired
     public GoogleCalendarController(GoogleCalendarService googleCalendarService, LectureSessionService lectureSessionService){
         this.googleCalendarService = googleCalendarService;
         this.lectureSessionService = lectureSessionService;
-    }
-
-    @GetMapping("/calendar")
-    @ResponseBody
-    public String getCalendarEvents(@RegisteredOAuth2AuthorizedClient("google") OAuth2AuthorizedClient authorizedClient,
-                                    @AuthenticationPrincipal OAuth2User oauth2User) {
-        String uri = "https://www.googleapis.com/calendar/v3/calendars/primary/events";
-
-        String response = new RestTemplate().getForObject(uri + "?access_token=" + authorizedClient.getAccessToken().getTokenValue(), String.class);
-
-        return response;
     }
 
 

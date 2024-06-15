@@ -60,7 +60,4 @@ public class LectureSessionService {
     public void deleteAllLectureSessions() {
         lectureSessionRepository.deleteAll();
     }
-    public List<LectureSession> findByEmail(String email){
-        return lectureSessionRepository.findLectureSessionsByInstructorEmail(email);
-    }
 }
